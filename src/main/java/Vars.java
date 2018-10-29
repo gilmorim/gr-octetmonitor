@@ -1,3 +1,5 @@
+import javax.print.DocFlavor;
+
 public class Vars {
     public static final int SUCCESS = 0;
     public static final int INVALID_IP = 1;
@@ -26,6 +28,23 @@ public class Vars {
             INVALID_TIMEOUT_MESSAGE,
             INVALID_RETRIES_MESSAGE,
             FILE_DOES_NOT_EXIST_MESSAGE
+    };
+
+    public static final String  INTERFACE_COUNT = "1.3.6.1.2.1.2.1";
+    public static final String  INTERFACE_INDEX_OID = "1.3.6.1.2.1.2.2.1.1";
+    public static final String  INTERFACE_DESCRIPTION_OID = ".1.3.6.1.2.1.2.2.1.2";
+    public static final String  INTERFACE_MACADDRESS_OID = "1.3.6.1.2.1.2.2.1.6";
+    public static final String  INTERFACE_INCOMING_OCTETS_OID = "1.3.6.1.2.1.2.2.1.10";
+    public static final String  INTERFACE_OUTGOING_OCTETS_OID = "1.3.6.1.2.1.2.2.1.16";
+    public static final String  INTERFACE_STATUS_OID = "1.3.6.1.2.1.2.2.1.7";
+
+    public static final String[] OID_LIST ={
+        INTERFACE_INDEX_OID,
+        INTERFACE_DESCRIPTION_OID,
+        INTERFACE_MACADDRESS_OID,
+        INTERFACE_INCOMING_OCTETS_OID,
+        INTERFACE_OUTGOING_OCTETS_OID,
+        INTERFACE_STATUS_OID
     };
 
 
