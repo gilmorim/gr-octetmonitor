@@ -44,7 +44,7 @@ public class ConfigFileParser {
     }
 
     public int openConfigFile() throws IOException {
-        String fileDirectory = "./src/main/resources/target.cfg";
+        String fileDirectory = "/home/gilberto/gitrep/gr-octetmonitor/src/main/resources/target.cfg";
         File file = new File(fileDirectory);
         int readStatus = 0;
         if(!file.exists()){

@@ -51,7 +51,7 @@ public class TestClass {
          System.out.println(entry.getKey() + " " + entry.getValue());
      }
 
-     for(Map.Entry<String, String> entry : interfacesResponse.entrySet()){
+     for(Map.Entry<String, String> entry : macAddressResponse.entrySet()){
          System.out.println(entry.getKey() + " " + entry.getValue());
      }
     }
