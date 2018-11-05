@@ -16,6 +16,7 @@ import java.util.TreeMap;
 
 public class SNMPFunctions {
 
+
     public SNMPFunctions(){ }
 
     public Map<String, String> getWalk(String oid, CommunityTarget communityTarget) throws IOException {

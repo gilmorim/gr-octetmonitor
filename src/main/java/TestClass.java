@@ -40,27 +40,41 @@ public class TestClass {
      SNMPFunctions snmp = new SNMPFunctions();
 
      int interfaceCount = 0;
-     Map<String, String> interfaceCountResponse = snmp.getWalk(Vars.INTERFACE_COUNT,target);
+     Map<String, String> interfaceCountResponse = snmp.getWalk(Vars.INTERFACE_COUNT_OID,target);
 
      for(Map.Entry<String, String> entry : interfaceCountResponse.entrySet())
          interfaceCount = Integer.parseInt(entry.getValue());
 
-        System.out.println("interface count " + interfaceCount);
+     for (int j = 0; j != interfaceCount; j++)
+         interfaces.add(new InterfaceInformation());
+
+     System.out.println("interface count " + interfaceCount);
 
      for(int i = 0; i != Vars.OID_LIST.length; i++){
 
          Map<String, String> snmpResponse = snmp.getWalk(Vars.OID_LIST[i], target);
-
-         for (int j = 0; j != 3; j++)
-                 interfaces.add(new InterfaceInformation());
-
          for(Map.Entry<String, String> entry : snmpResponse.entrySet()) {
 
-                String objectID = entry.getKey();
-                int objectNumber = Integer.parseInt(entry.getKey().substring(objectID.length() - 1));
-                System.out.println(entry.getKey() + " " + entry.getValue());
+                OID oid = new OID(entry.getKey());
+                int interfaceIndex = oid.get(10) - 1;
+                int objectIndex = oid.get(9);
 
+                String value =  entry.getValue();
+
+                switch (objectIndex){
+                    case Vars.INDEX : {interfaces.get(interfaceIndex).setIndex(Integer.parseInt(value)); break;}
+                    case Vars.DESCRIPTION : {interfaces.get(interfaceIndex).setDescription(value); break;}
+                    case Vars.MACADDRESS : {interfaces.get(interfaceIndex).setMacAddress(value); break;}
+                    case Vars.STATUS : {interfaces.get(interfaceIndex).setStatus(value); break;}
+                    case Vars.INCOMING_OCTETS : {interfaces.get(interfaceIndex).setIncomingOctets(Integer.parseInt(value)); break;}
+                    case Vars.OUTGOING_OCTETS : {interfaces.get(interfaceIndex).setOutgoingOctets(Integer.parseInt(value)); break;}
+                    default: { System.out.println("unknown index"); break;}
+                }
              }
      }
+
+     for(InterfaceInformation interfaceinfo : interfaces)
+         System.out.println(interfaceinfo.toString());
     }
 }
+

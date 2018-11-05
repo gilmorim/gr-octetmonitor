@@ -4,11 +4,11 @@ public class InterfaceInformation {
     String macAddress;
     int incomingOctets;
     int outgoingOctets;
-    boolean status;
+    String status;
 
     public InterfaceInformation(){}
 
-    public InterfaceInformation(int index, String description, String macAddress, int incomingOctets, int outgoingOctets, boolean status) {
+    public InterfaceInformation(int index, String description, String macAddress, int incomingOctets, int outgoingOctets, String status) {
         this.index = index;
         this.description = description;
         this.macAddress = macAddress;
@@ -38,7 +38,7 @@ public class InterfaceInformation {
         return outgoingOctets;
     }
 
-    public boolean isStatus() {
+    public String isStatus() {
         return status;
     }
 
@@ -62,11 +62,23 @@ public class InterfaceInformation {
         this.outgoingOctets = outgoingOctets;
     }
 
-    public void setStatus(boolean status) {
+    public void setStatus(String status) {
         this.status = status;
     }
 
     public int getDifference() {
         return incomingOctets - outgoingOctets;
+    }
+
+    @Override
+    public String toString() {
+        return "Interface data: " +
+                "index=" + index +
+                ", description='" + description + '\'' +
+                ", macAddress='" + macAddress + '\'' +
+                ", incomingOctets=" + incomingOctets +
+                ", outgoingOctets=" + outgoingOctets +
+                ", status='" + status + '\'' +
+                ", difference='" + getDifference() + '\'';
     }
 }
