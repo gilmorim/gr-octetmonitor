@@ -3,6 +3,7 @@ import org.snmp4j.smi.*;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 /*
@@ -31,6 +32,7 @@ public class TestClass {
 
      /*build community target*/
      CommunityTarget target = new CommunityTarget();
+
      target.setCommunity(new OctetString(communityString));
      target.setAddress(GenericAddress.parse("udp:"+ipAddress+"/"+port));
      target.setRetries(retries);
@@ -42,10 +44,11 @@ public class TestClass {
      int interfaceCount = 0;
      Map<String, String> interfaceCountResponse = snmp.getWalk(Vars.INTERFACE_COUNT_OID,target);
 
+
      for(Map.Entry<String, String> entry : interfaceCountResponse.entrySet())
          interfaceCount = Integer.parseInt(entry.getValue());
 
-     for (int j = 0; j != interfaceCount; j++)
+     for (int i = 0; i != interfaceCount; i++)
          interfaces.add(new InterfaceInformation());
 
      System.out.println("interface count " + interfaceCount);
@@ -53,13 +56,17 @@ public class TestClass {
      for(int i = 0; i != Vars.OID_LIST.length; i++){
 
          Map<String, String> snmpResponse = snmp.getWalk(Vars.OID_LIST[i], target);
-         for(Map.Entry<String, String> entry : snmpResponse.entrySet()) {
+         String[] values = snmpResponse.values().toArray(new String[0]);
+         String[] keys = snmpResponse.keySet().toArray(new String[0]);
 
-                OID oid = new OID(entry.getKey());
-                int interfaceIndex = oid.get(10) - 1;
+         for(int j = 0; j != values.length; j++) {
+
+                OID oid = new OID(keys[j]);
+
+                int interfaceIndex = j;
                 int objectIndex = oid.get(9);
 
-                String value =  entry.getValue();
+                String value =  values[j];
 
                 switch (objectIndex){
                     case Vars.INDEX : {interfaces.get(interfaceIndex).setIndex(Integer.parseInt(value)); break;}
