@@ -42,9 +42,7 @@ public class Vars {
         INTERFACE_INDEX_OID,
         INTERFACE_DESCRIPTION_OID,
         INTERFACE_MACADDRESS_OID,
-        INTERFACE_STATUS_OID,
-        INTERFACE_INCOMING_OCTETS_OID,
-        INTERFACE_OUTGOING_OCTETS_OID
+        INTERFACE_STATUS_OID
     };
 
     public static final int  INDEX = 1;

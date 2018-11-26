@@ -1,7 +1,10 @@
 import org.snmp4j.CommunityTarget;
+import org.snmp4j.PDU;
 import org.snmp4j.Snmp;
 import org.snmp4j.TransportMapping;
+import org.snmp4j.event.ResponseEvent;
 import org.snmp4j.smi.Address;
+import org.snmp4j.smi.Integer32;
 import org.snmp4j.smi.OID;
 import org.snmp4j.smi.VariableBinding;
 import org.snmp4j.transport.DefaultUdpTransportMapping;
@@ -16,11 +19,11 @@ import java.util.TreeMap;
 
 public class SNMPFunctions {
 
+    public SNMPFunctions(){
+    }
 
-    public SNMPFunctions(){ }
-
-    public Map<String, String> getWalk(String oid, CommunityTarget communityTarget) throws IOException {
-        Map<String, String> response = new TreeMap<>();
+    public Map<String, SNMPResponseData> getWalk(String oid, CommunityTarget communityTarget) throws IOException {
+        Map<String, SNMPResponseData> response = new TreeMap<>();
         TransportMapping<? extends Address> transport = new DefaultUdpTransportMapping();
         Snmp snmp = new Snmp(transport);
         transport.listen();
@@ -43,6 +46,7 @@ public class SNMPFunctions {
             }
 
             VariableBinding[] variableBindings = event.getVariableBindings();
+            SNMPResponseData data = new SNMPResponseData();
 
             if(variableBindings == null || variableBindings.length == 0){
                 continue;
@@ -52,12 +56,56 @@ public class SNMPFunctions {
                 if(variableBind == null)
                     continue;
 
-                response.put("." + variableBind.getOid().toString(), variableBind.getVariable().toString());
+                data.setResponse(variableBind.getVariable().toString());
+                response.put("." + variableBind.getOid().toString(), data);
 
             }
         }
         snmp.close();
         return response;
+    }
+
+    public SNMPResponseData getNext(String oid, CommunityTarget target) throws IOException {
+
+        SNMPResponseData snmpResponse = new SNMPResponseData();
+        TransportMapping<? extends Address> transport = new DefaultUdpTransportMapping();
+        transport.listen();
+
+        PDU pdu = new PDU();
+        pdu.add(new VariableBinding(new OID(oid)));
+        pdu.setRequestID(new Integer32(1));
+        pdu.setType(PDU.GETNEXT);
+
+        Snmp snmp = new Snmp(transport);
+
+        ResponseEvent response = snmp.getNext(pdu, target);
+
+        if(response != null){
+            PDU responsePDU = response.getResponse();
+
+            if(responsePDU != null){
+                int errorStatus = responsePDU.getErrorStatus();
+                int errorIndex = responsePDU.getErrorIndex();
+                String errorStatusText = responsePDU.getErrorStatusText();
+
+                if(errorStatus == PDU.noError){
+                    snmpResponse.setPdu(responsePDU);
+                    snmpResponse.setResponse(responsePDU.getVariableBindings().get(0).getVariable().toString());
+                } else {
+                    System.out.println("Error: Request failed");
+                    System.out.println("Error status " + errorStatus);
+                    System.out.println("Error index " + errorIndex);
+                    System.out.println("Error status text " + errorStatusText);
+                }
+            } else {
+                System.out.println("Error: response is null");
+            }
+        } else {
+            System.out.println("Agent timeout");
+        }
+
+        snmp.close();
+        return snmpResponse;
     }
 
 }

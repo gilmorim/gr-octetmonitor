@@ -1,3 +1,5 @@
+import org.snmp4j.smi.OID;
+
 public class InterfaceInformation {
     int index;
     String description;
@@ -5,17 +7,11 @@ public class InterfaceInformation {
     int incomingOctets;
     int outgoingOctets;
     String status;
+    int interval;
+    String incomingOctetsOid;
+    String outgoingOctetsOid;
 
     public InterfaceInformation(){}
-
-    public InterfaceInformation(int index, String description, String macAddress, int incomingOctets, int outgoingOctets, String status) {
-        this.index = index;
-        this.description = description;
-        this.macAddress = macAddress;
-        this.incomingOctets = incomingOctets;
-        this.outgoingOctets = outgoingOctets;
-        this.status = status;
-    }
 
 
     public int getIndex() {
@@ -70,6 +66,30 @@ public class InterfaceInformation {
         return incomingOctets - outgoingOctets;
     }
 
+    public int getInterval() { return interval; }
+
+    public void setInterval(int delay) { this.interval = delay; }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public String getIncomingOctetsOid() {
+        return incomingOctetsOid;
+    }
+
+    public String getOutgoingOctetsOid() {
+        return outgoingOctetsOid;
+    }
+
+    public void setIncomingOctetsOid(String incomingOctetsOid) {
+        this.incomingOctetsOid = incomingOctetsOid;
+    }
+
+    public void setOutgoingOctetsOid(String outgoingOctetsOid) {
+        this.outgoingOctetsOid = outgoingOctetsOid;
+    }
+
     @Override
     public String toString() {
         return "Interface data: " +
@@ -79,6 +99,8 @@ public class InterfaceInformation {
                 ", incomingOctets=" + incomingOctets +
                 ", outgoingOctets=" + outgoingOctets +
                 ", status='" + status + '\'' +
+                ", incoming octets OID ='" + incomingOctetsOid + '\'' +
+                ", outgoing octets OID ='" + outgoingOctetsOid + '\'' +
                 ", difference='" + getDifference() + '\'';
     }
 }
