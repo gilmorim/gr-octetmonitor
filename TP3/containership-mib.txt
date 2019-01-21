@@ -8,5 +8,37 @@ IMPORTS
     ;
 
 
-containerShip MODULE-IDENTITY
-  
+containerSHIPMIB MODULE-IDENTITY
+    LAST-UPDATED "201901210000Z"
+    ORGANIZATION "Mieti - Gestão de Redes - Grupo 4"
+    CONTACT-INFO    
+	 "    postal:   Azurem 
+          email:    mieti@eng.uminho.pt"
+    DESCRIPTION
+	
+    ::= {private 2019}
+
+
+containerShipParamTable OBJECT-TYPE
+    SYNTAX      SEQUENCE OF containerShipParamEntry
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION
+	"grupo com objetos que representam um container novo a ser criado"
+    ::= { exercicioRFID 1 }
+
+
+containerShipParamEntry OBJECT-TYPE
+    SYNTAX      containerShipParamTableEntry
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION
+	"Uma linha da tabela com 3 objetos: índice da imagem, nome e flag"
+    INDEX   { indImage }
+    ::= { containerShipParamTable 1 }
+
+    containerShipParamTableEntry ::= SEQUENCE {
+	indImage	Integer32,
+	flag	Integer32,
+	nome	DisplayString
+}
