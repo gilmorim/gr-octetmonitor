@@ -25,7 +25,7 @@ containerShipParamTable OBJECT-TYPE
     STATUS      current
     DESCRIPTION
 	"grupo com objetos que representam um container novo a ser criado"
-    ::= { exercicioRFID 1 }
+    ::= { containerSHIPMIB 1 }
 
 
 containerShipParamEntry OBJECT-TYPE
@@ -37,8 +37,32 @@ containerShipParamEntry OBJECT-TYPE
     INDEX   { indImage }
     ::= { containerShipParamTable 1 }
 
-    containerShipParamTableEntry ::= SEQUENCE {
+containerShipParamTableEntry ::= SEQUENCE {
 	indImage	Integer32,
 	flag	Integer32,
 	nome	DisplayString
 }
+
+
+containerShipImageTable OBJECT-TYPE
+    SYNTAX      SEQUENCE OF containerShipImageEntry
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION
+	"grupo com a tabela de imagens disponíveis"
+    ::= { containerSHIPMIB 2 }
+
+containerShipImageEntry OBJECT-TYPE
+    SYNTAX      containerShipImageTableEntry
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION
+	"Uma linha da tabela pelo menos 2 objetos: INDEX e imaga"
+    INDEX   { index }
+    ::= { containerShipImageTable 1 }
+
+containerShipImageTableEntry ::= SEQUENCE {
+	index	Integer32,
+	image	DisplayString
+}
+
