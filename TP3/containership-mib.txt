@@ -18,7 +18,9 @@ containerSHIPMIB MODULE-IDENTITY
 	
     ::= {private 2019}
 
-
+--
+-- containerShipParamTable
+--
 containerShipParamTable OBJECT-TYPE
     SYNTAX      SEQUENCE OF containerShipParamEntry
     MAX-ACCESS  not-accessible
@@ -43,6 +45,9 @@ containerShipParamTableEntry ::= SEQUENCE {
 	nome	DisplayString
 }
 
+--
+-- containerShipImageTable
+--
 
 containerShipImageTable OBJECT-TYPE
     SYNTAX      SEQUENCE OF containerShipImageEntry
