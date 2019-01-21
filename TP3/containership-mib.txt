@@ -1,0 +1,12 @@
+CONTAINERSHIP-MIB DEFINITIONS ::= BEGIN
+
+IMPORTS
+    MODULE-IDENTITY, OBJECT-TYPE, Integer32, IpAddress,
+    NOTIFICATION-TYPE, experimental         FROM SNMPv2-SMI
+    RowStatus, StorageType, DisplayString   FROM SNMPv2-TC
+    InetAddressType, InetAddress            FROM INET-ADDRESS-MIB
+    ;
+
+
+containerShip MODULE-IDENTITY
+  
