@@ -57,12 +57,42 @@ containerShipImageEntry OBJECT-TYPE
     MAX-ACCESS  not-accessible
     STATUS      current
     DESCRIPTION
-	"Uma linha da tabela pelo menos 2 objetos: INDEX e imaga"
+	"Uma linha da tabela pelo menos 2 objetos: INDEX e image"
     INDEX   { index }
     ::= { containerShipImageTable 1 }
 
 containerShipImageTableEntry ::= SEQUENCE {
 	index	Integer32,
 	image	DisplayString
+}
+
+--
+-- containerShipContainerTable
+--
+
+containerShipContainerTable OBJECT-TYPE
+    SYNTAX      SEQUENCE OF containerShipContainerEntry
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION
+	"grupo com a tabela de containers que foramcriados"
+    ::= { containerSHIPMIB 3 }
+
+containerShipContainerEntry OBJECT-TYPE
+    SYNTAX      containerShipContainerTableEntry
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION
+	"Uma linha da tabela pelo menos 4 objetos: INDEX, Name,indice da image, Status (up, down,
+removing, creating e changing)e Procesor (percentagem de utilização desse container)"
+    INDEX   { index }
+    ::= { containerShipContainerTable 1 }
+
+containerShipContainerTableEntry ::= SEQUENCE {
+	index	Integer32,
+    Name DisplayString,
+	image DisplayString,
+    Status DisplayString, 
+    Procesor DisplayString
 }
 
