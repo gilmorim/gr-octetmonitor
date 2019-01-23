@@ -161,7 +161,8 @@ ContainerShipContainerTableEntry ::= SEQUENCE {
 	indexc	Integer32,
     namec DisplayString,
 	imagec DisplayString,
-    statusc DisplayString
+    statusc DisplayString,
+    procesorc Integer32
 }
 
 
@@ -196,9 +197,13 @@ statusc OBJECT-TYPE
     DESCRIPTION
 	"estado do container criado"
     ::= { containerShipContainerEntry 4 }
-
-
-
+procesorc OBJECT-TYPE
+    SYNTAX      Integer32 (1..32)
+    MAX-ACCESS  read-create
+    STATUS      current
+    DESCRIPTION
+	"percentagem de uso do container criado"
+    ::= { containerShipContainerEntry 5 }
 
 --
 --containershipStatus
