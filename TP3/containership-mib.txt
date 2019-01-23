@@ -1,29 +1,38 @@
 CONTAINERSHIP-MIB DEFINITIONS ::= BEGIN
 
 IMPORTS
-    MODULE-IDENTITY, OBJECT-TYPE, Integer32, IpAddress,
-    NOTIFICATION-TYPE, experimental         FROM SNMPv2-SMI
-    RowStatus, StorageType, DisplayString   FROM SNMPv2-TC
-    InetAddressType, InetAddress            FROM INET-ADDRESS-MIB
+    MODULE-IDENTITY, OBJECT-TYPE, Integer32, experimental, TimeTicks         
+    FROM SNMPv2-SMI
+      DisplayString   FROM SNMPv2-TC
+            
     ;
 
 
 containerSHIPMIB MODULE-IDENTITY
-    LAST-UPDATED "201901210000Z"
-    ORGANIZATION "Mieti - Gestão de Redes - Grupo 4"
-    CONTACT-INFO    
-	 "    postal:   Azurem 
-          email:    mieti@eng.uminho.pt"
-    DESCRIPTION
-	
-    ::= {private 2019}
+LAST-UPDATED "201901230000Z"
+ORGANIZATION "Mieti - Gestao de Redes - Grupo 4"
+CONTACT-INFO    
+"postal:   Azurem  email:    mieti@eng.uminho.pt"
+DESCRIPTION
+"Example MIB objects for agent module example implementations"
+REVISION     "201901230000Z"
+DESCRIPTION
+	"Corrected notification example definitions"
+REVISION "201901220000Z"
+DESCRIPTION
+	"First draft"
+::={experimental 2019}
+
+
 
 --
 -- containerShipParamTable 
 -- TODO : READ - WRITE 
 --
+
+
 containerShipParamTable OBJECT-TYPE
-    SYNTAX      SEQUENCE OF containerShipParamEntry
+    SYNTAX      SEQUENCE OF ContainerShipParamTableEntry
     MAX-ACCESS  not-accessible
     STATUS      current
     DESCRIPTION
@@ -32,34 +41,62 @@ containerShipParamTable OBJECT-TYPE
 
 
 containerShipParamEntry OBJECT-TYPE
-    SYNTAX      containerShipParamTableEntry
+    SYNTAX      ContainerShipParamTableEntry
     MAX-ACCESS  not-accessible
     STATUS      current
     DESCRIPTION
-	"Uma linha da tabela com 3 objetos: índice da imagem, nome e flag"
+	"Uma linha da tabela com 3 objetos indice da imagem, nome e flag"
     INDEX   { indImage }
     ::= { containerShipParamTable 1 }
 
-containerShipParamTableEntry ::= SEQUENCE {
-	indImage	Integer32,
-	flag	Integer32,
-	nome	DisplayString
+ContainerShipParamTableEntry ::= SEQUENCE {
+	indImage Integer32,
+	flag Integer32,
+	nome DisplayString
 }
+indImage OBJECT-TYPE
+    SYNTAX      Integer32 (1..32)
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION
+	"indice "
+    ::= { containerShipParamEntry 1 }
+
+flag OBJECT-TYPE
+    SYNTAX      Integer32 (1..32)
+    MAX-ACCESS  read-create
+    STATUS      current
+    DESCRIPTION
+	"flag"
+    ::= { containerShipParamEntry 2 }
+
+nome OBJECT-TYPE
+    SYNTAX      DisplayString
+    MAX-ACCESS  read-create
+    STATUS      current
+    DESCRIPTION
+	"nome"
+    ::= { containerShipParamEntry 3 }
+
+
+
 
 --
 -- containerShipImageTable
 --
 
+
+
 containerShipImageTable OBJECT-TYPE
-    SYNTAX      SEQUENCE OF containerShipImageEntry
+    SYNTAX      SEQUENCE OF ContainerShipImageTableEntry
     MAX-ACCESS  not-accessible
     STATUS      current
     DESCRIPTION
-	"grupo com a tabela de imagens disponíveis"
+	"grupo com a tabela de imagens disponiveis"
     ::= { containerSHIPMIB 2 }
 
 containerShipImageEntry OBJECT-TYPE
-    SYNTAX      containerShipImageTableEntry
+    SYNTAX      ContainerShipImageTableEntry
     MAX-ACCESS  not-accessible
     STATUS      current
     DESCRIPTION
@@ -67,17 +104,35 @@ containerShipImageEntry OBJECT-TYPE
     INDEX   { index }
     ::= { containerShipImageTable 1 }
 
-containerShipImageTableEntry ::= SEQUENCE {
+ContainerShipImageTableEntry ::= SEQUENCE {
 	index	Integer32,
 	image	DisplayString
 }
+
+index OBJECT-TYPE
+    SYNTAX      Integer32 (1..32)
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION
+	"indice "
+    ::= { containerShipImageEntry 1 }
+
+image OBJECT-TYPE
+    SYNTAX      DisplayString
+    MAX-ACCESS  read-create
+    STATUS      current
+    DESCRIPTION
+	"image"
+    ::= { containerShipImageEntry 2 }
+
 
 --
 -- containerShipContainerTable
 --
 
+
 containerShipContainerTable OBJECT-TYPE
-    SYNTAX      SEQUENCE OF containerShipContainerEntry
+    SYNTAX      SEQUENCE OF ContainerShipContainerTableEntry
     MAX-ACCESS  not-accessible
     STATUS      current
     DESCRIPTION
@@ -85,48 +140,85 @@ containerShipContainerTable OBJECT-TYPE
     ::= { containerSHIPMIB 3 }
 
 containerShipContainerEntry OBJECT-TYPE
-    SYNTAX      containerShipContainerTableEntry
+    SYNTAX      ContainerShipContainerTableEntry
     MAX-ACCESS  not-accessible
     STATUS      current
     DESCRIPTION
 	"Uma linha da tabela pelo menos 4 objetos: INDEX, Name,indice da image, Status (up, down,
-removing, creating e changing)e Procesor (percentagem de utilização desse container)"
+removing, creating e changing)e Procesor (percentagem de utilizacao desse container)"
     INDEX   { index }
     ::= { containerShipContainerTable 1 }
 
-containerShipContainerTableEntry ::= SEQUENCE {
-	index	Integer32,
-    Name DisplayString,
-	image DisplayString,
-    Status DisplayString, 
-    Procesor DisplayString
+ContainerShipContainerTableEntry ::= SEQUENCE {
+	indexc	Integer32,
+    namec DisplayString,
+	imagec DisplayString,
+    statusc DisplayString
 }
+
+
+indexc OBJECT-TYPE
+    SYNTAX      Integer32 (1..32)
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION
+	"indice "
+    ::= { containerShipContainerEntry 1 }
+
+namec OBJECT-TYPE
+    SYNTAX      DisplayString
+    MAX-ACCESS  read-create
+    STATUS      current
+    DESCRIPTION
+	"flag"
+    ::= { containerShipContainerEntry 2 }
+
+imagec OBJECT-TYPE
+    SYNTAX      DisplayString
+    MAX-ACCESS  read-create
+    STATUS      current
+    DESCRIPTION
+	"nome"
+    ::= { containerShipContainerEntry 3 }
+
+statusc OBJECT-TYPE
+    SYNTAX      DisplayString
+    MAX-ACCESS  read-create
+    STATUS      current
+    DESCRIPTION
+	"nome"
+    ::= { containerShipContainerEntry 4 }
+
+
+
 
 --
 --containershipStatus
 --READ-WRITE table
 
 containershipStatusTable OBJECT-TYPE
-    SYNTAX SEQUENCE OF containershipStatusEntry
+    SYNTAX SEQUENCE OF ContainerShipStatusTableEntry
     MAX-ACCESS  not-accessible
     STATUS      current
     DESCRIPTION
-	"Informação estistica da utilização da mib"
+	"Informacao estistica da utilizacao da mib"
     ::= { containerSHIPMIB 4 }
 
-containerShipContainerEntry OBJECT-TYPE
-    SYNTAX      containershipStatusTableEntry
+containerShipStatusEntry OBJECT-TYPE
+    SYNTAX      ContainerShipStatusTableEntry
     MAX-ACCESS  not-accessible
     STATUS      current
     DESCRIPTION
-	"Uma linha da tabela contem varias Informações estisticas sobre a utilização: id do utilizador, index, tempo de inicio e tempo final da utilizacao"
+	"Uma linha da tabela contem varias Informacoes estisticas sobre a utilizacao: id do utilizador, index, tempo de inicio e tempo final da utilizacao"
     INDEX   { index }
     ::= { containershipStatusTable 1 }
 
 
-containerShipContainerTableEntry ::= SEQUENCE {
+ContainerShipStatusTableEntry ::= SEQUENCE {
 	index	Integer32,
-    UserId Integer32,
-	TimeBegin  Timestamp,
-    Timefinal Timestamp, 
+    userId Integer32,
+	timeBegin  TimeTicks,
+    timefinal TimeTicks 
 }
+
+END
