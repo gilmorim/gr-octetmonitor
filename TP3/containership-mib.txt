@@ -178,7 +178,7 @@ namec OBJECT-TYPE
     MAX-ACCESS  read-create
     STATUS      current
     DESCRIPTION
-	"flagname do container criado"
+	"nome do container criado"
     ::= { containerShipContainerEntry 2 }
 
 imagec OBJECT-TYPE
