@@ -215,10 +215,43 @@ containerShipStatusEntry OBJECT-TYPE
 
 
 ContainerShipStatusTableEntry ::= SEQUENCE {
-	index	Integer32,
-    userId Integer32,
-	timeBegin  TimeTicks,
-    timefinal TimeTicks 
+	indexs	Integer32,
+    userIds Integer32,
+	timeBegins  TimeTicks,
+    timeFinals TimeTicks 
 }
 
+
+
+indexs OBJECT-TYPE
+    SYNTAX      Integer32 (1..32)
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION
+	"indice "
+    ::= { containerShipStatusEntry 1 }
+
+userIds OBJECT-TYPE
+    SYNTAX      Integer32 (1..32)
+    MAX-ACCESS  read-create
+    STATUS      current
+    DESCRIPTION
+	"flag"
+    ::= { containerShipStatusEntry 2 }
+
+timeBegins OBJECT-TYPE
+    SYNTAX      TimeTicks
+    MAX-ACCESS  read-create
+    STATUS      current
+    DESCRIPTION
+	"nome"
+    ::= { containerShipStatusEntry 3 }
+
+timeFinals OBJECT-TYPE
+    SYNTAX      TimeTicks
+    MAX-ACCESS  read-create
+    STATUS      current
+    DESCRIPTION
+	"nome"
+    ::= { containerShipStatusEntry 4 }    
 END
