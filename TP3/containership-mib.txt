@@ -19,7 +19,8 @@ containerSHIPMIB MODULE-IDENTITY
     ::= {private 2019}
 
 --
--- containerShipParamTable
+-- containerShipParamTable 
+-- TODO : READ - WRITE 
 --
 containerShipParamTable OBJECT-TYPE
     SYNTAX      SEQUENCE OF containerShipParamEntry
@@ -80,7 +81,7 @@ containerShipContainerTable OBJECT-TYPE
     MAX-ACCESS  not-accessible
     STATUS      current
     DESCRIPTION
-	"grupo com a tabela de containers que foramcriados"
+	"grupo com a tabela de containers que foram criados"
     ::= { containerSHIPMIB 3 }
 
 containerShipContainerEntry OBJECT-TYPE
@@ -101,3 +102,31 @@ containerShipContainerTableEntry ::= SEQUENCE {
     Procesor DisplayString
 }
 
+--
+--containershipStatus
+--READ-WRITE table
+
+containershipStatusTable OBJECT-TYPE
+    SYNTAX SEQUENCE OF containershipStatusEntry
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION
+	"Informação estistica da utilização da mib"
+    ::= { containerSHIPMIB 4 }
+
+containerShipContainerEntry OBJECT-TYPE
+    SYNTAX      containershipStatusTableEntry
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION
+	"Uma linha da tabela contem varias Informações estisticas sobre a utilização: id do utilizador, index, tempo de inicio e tempo final da utilizacao"
+    INDEX   { index }
+    ::= { containershipStatusTable 1 }
+
+
+containerShipContainerTableEntry ::= SEQUENCE {
+	index	Integer32,
+    UserId Integer32,
+	TimeBegin  Timestamp,
+    Timefinal Timestamp, 
+}
