@@ -46,38 +46,45 @@ containerShipParamEntry OBJECT-TYPE
     STATUS      current
     DESCRIPTION
 	"Uma linha da tabela com 3 objetos indice da imagem, nome e flag"
-    INDEX   { indImage }
+    INDEX   { indexp }
     ::= { containerShipParamTable 1 }
 
 ContainerShipParamTableEntry ::= SEQUENCE {
-	indImage Integer32,
-	flag Integer32,
-	nome DisplayString
+    indexp Integer32,
+	indImagep Integer32,
+	flagp Integer32,
+	nomep DisplayString
 }
-indImage OBJECT-TYPE
+indexp OBJECT-TYPE
     SYNTAX      Integer32 (1..32)
     MAX-ACCESS  not-accessible
     STATUS      current
     DESCRIPTION
-	"indice "
+	"indice que indentifica a linha da tabela "
     ::= { containerShipParamEntry 1 }
-
-flag OBJECT-TYPE
+indImagep OBJECT-TYPE
     SYNTAX      Integer32 (1..32)
-    MAX-ACCESS  read-create
+    MAX-ACCESS  read-write
     STATUS      current
     DESCRIPTION
-	"flag"
+	"indice da imagem do container novo a ser criado "
     ::= { containerShipParamEntry 2 }
 
-nome OBJECT-TYPE
-    SYNTAX      DisplayString
-    MAX-ACCESS  read-create
+flagp OBJECT-TYPE
+    SYNTAX      Integer32 (1..32)
+    MAX-ACCESS  read-write
     STATUS      current
     DESCRIPTION
-	"nome"
+	"flag do container novo a ser criado. Indica se devera ser criado o container"
     ::= { containerShipParamEntry 3 }
 
+nomep OBJECT-TYPE
+    SYNTAX      DisplayString
+    MAX-ACCESS  read-write
+    STATUS      current
+    DESCRIPTION
+	"nome do container novo a ser criado"
+    ::= { containerShipParamEntry 4 }
 
 
 
@@ -101,15 +108,15 @@ containerShipImageEntry OBJECT-TYPE
     STATUS      current
     DESCRIPTION
 	"Uma linha da tabela pelo menos 2 objetos: INDEX e image"
-    INDEX   { index }
+    INDEX   { indexi }
     ::= { containerShipImageTable 1 }
 
 ContainerShipImageTableEntry ::= SEQUENCE {
-	index	Integer32,
-	image	DisplayString
+	indexi	Integer32,
+	imagei	DisplayString
 }
 
-index OBJECT-TYPE
+indexi OBJECT-TYPE
     SYNTAX      Integer32 (1..32)
     MAX-ACCESS  not-accessible
     STATUS      current
@@ -117,12 +124,12 @@ index OBJECT-TYPE
 	"indice "
     ::= { containerShipImageEntry 1 }
 
-image OBJECT-TYPE
+imagei OBJECT-TYPE
     SYNTAX      DisplayString
-    MAX-ACCESS  read-create
+    MAX-ACCESS  read-write
     STATUS      current
     DESCRIPTION
-	"image"
+	"Imagem disponiveis"
     ::= { containerShipImageEntry 2 }
 
 
@@ -145,9 +152,10 @@ containerShipContainerEntry OBJECT-TYPE
     STATUS      current
     DESCRIPTION
 	"Uma linha da tabela pelo menos 4 objetos: INDEX, Name,indice da image, Status (up, down,
-removing, creating e changing)e Procesor (percentagem de utilizacao desse container)"
-    INDEX   { index }
+    removing, creating e changing)e Procesor (percentagem de utilizacao desse container)"
+    INDEX   { indexc }
     ::= { containerShipContainerTable 1 }
+
 
 ContainerShipContainerTableEntry ::= SEQUENCE {
 	indexc	Integer32,
@@ -162,7 +170,7 @@ indexc OBJECT-TYPE
     MAX-ACCESS  not-accessible
     STATUS      current
     DESCRIPTION
-	"indice "
+	"indice dos containers que foram criados"
     ::= { containerShipContainerEntry 1 }
 
 namec OBJECT-TYPE
@@ -170,7 +178,7 @@ namec OBJECT-TYPE
     MAX-ACCESS  read-create
     STATUS      current
     DESCRIPTION
-	"flag"
+	"flagname do container criado"
     ::= { containerShipContainerEntry 2 }
 
 imagec OBJECT-TYPE
@@ -178,7 +186,7 @@ imagec OBJECT-TYPE
     MAX-ACCESS  read-create
     STATUS      current
     DESCRIPTION
-	"nome"
+	"imagem do container criado"
     ::= { containerShipContainerEntry 3 }
 
 statusc OBJECT-TYPE
@@ -186,7 +194,7 @@ statusc OBJECT-TYPE
     MAX-ACCESS  read-create
     STATUS      current
     DESCRIPTION
-	"nome"
+	"estado do container criado"
     ::= { containerShipContainerEntry 4 }
 
 
@@ -210,7 +218,7 @@ containerShipStatusEntry OBJECT-TYPE
     STATUS      current
     DESCRIPTION
 	"Uma linha da tabela contem varias Informacoes estisticas sobre a utilizacao: id do utilizador, index, tempo de inicio e tempo final da utilizacao"
-    INDEX   { index }
+    INDEX   { indexs }
     ::= { containershipStatusTable 1 }
 
 
@@ -222,13 +230,12 @@ ContainerShipStatusTableEntry ::= SEQUENCE {
 }
 
 
-
 indexs OBJECT-TYPE
     SYNTAX      Integer32 (1..32)
     MAX-ACCESS  not-accessible
     STATUS      current
     DESCRIPTION
-	"indice "
+	"indice que identifica a Informacao do container  "
     ::= { containerShipStatusEntry 1 }
 
 userIds OBJECT-TYPE
@@ -236,7 +243,7 @@ userIds OBJECT-TYPE
     MAX-ACCESS  read-create
     STATUS      current
     DESCRIPTION
-	"flag"
+	"id do utilizador que criou o container"
     ::= { containerShipStatusEntry 2 }
 
 timeBegins OBJECT-TYPE
@@ -244,7 +251,7 @@ timeBegins OBJECT-TYPE
     MAX-ACCESS  read-create
     STATUS      current
     DESCRIPTION
-	"nome"
+	"etiqueta que indica o inicio da criacao do container"
     ::= { containerShipStatusEntry 3 }
 
 timeFinals OBJECT-TYPE
@@ -252,6 +259,6 @@ timeFinals OBJECT-TYPE
     MAX-ACCESS  read-create
     STATUS      current
     DESCRIPTION
-	"nome"
+	"etiqueta que indica o final do uso do container"
     ::= { containerShipStatusEntry 4 }    
 END
