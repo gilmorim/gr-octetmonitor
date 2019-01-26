@@ -1,0 +1,11 @@
+
+mkdir
+snmprec.py --agent-udpv4-endpoint=193.136.9.234 --output-file=./data/public.snmprec
+
+mib2dev.py --mib-source . --mib-source http://mibs.snmplabs.com/asn1/@mib@ --output-file=./data/rfid.snmprec --mib-module=NOME DA mib
+
+
+snmpsimd.py --data-dir=./data --agent-udpv4-endpoint=127.0.0.1:1024
+
+
+snmpwalk -v2c -c rfid 127.0.0.1:1024
