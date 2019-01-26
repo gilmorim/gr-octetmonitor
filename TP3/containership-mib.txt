@@ -26,49 +26,36 @@ DESCRIPTION
 
 
 --
--- containerShipParamTable 
+-- containerShipParam - não table 
 -- TODO : READ - WRITE 
 --
 
 
-containerShipParamTable OBJECT-TYPE
+containerShipParam OBJECT-TYPE
     SYNTAX      SEQUENCE OF ContainerShipParamTableEntry
     MAX-ACCESS  not-accessible
     STATUS      current
     DESCRIPTION
-	"grupo com objetos que representam um container novo a ser criado"
+	"grupo com objetos que representam um container novo a ser criado
+    Uma linha da tabela com 3 objetos indice da imagem, nome e flag"
     ::= { containerSHIPMIB 1 }
 
 
-containerShipParamEntry OBJECT-TYPE
-    SYNTAX      ContainerShipParamTableEntry
-    MAX-ACCESS  not-accessible
-    STATUS      current
-    DESCRIPTION
-	"Uma linha da tabela com 3 objetos indice da imagem, nome e flag"
-    INDEX   { indexp }
-    ::= { containerShipParamTable 1 }
 
-ContainerShipParamTableEntry ::= SEQUENCE {
-    indexp Integer32,
-	indImagep Integer32,
-	flagp Integer32,
-	nomep DisplayString
-}
 indexp OBJECT-TYPE
     SYNTAX      Integer32 (1..32)
-    MAX-ACCESS  not-accessible
+    MAX-ACCESS  read-write
     STATUS      current
     DESCRIPTION
 	"indice que indentifica a linha da tabela "
-    ::= { containerShipParamEntry 1 }
+    ::= { containerShipParam 1 }
 indImagep OBJECT-TYPE
     SYNTAX      Integer32 (1..32)
     MAX-ACCESS  read-write
     STATUS      current
     DESCRIPTION
 	"indice da imagem do container novo a ser criado "
-    ::= { containerShipParamEntry 2 }
+    ::= { containerShipParam 2 }
 
 flagp OBJECT-TYPE
     SYNTAX      Integer32 (1..32)
@@ -76,7 +63,7 @@ flagp OBJECT-TYPE
     STATUS      current
     DESCRIPTION
 	"flag do container novo a ser criado. Indica se devera ser criado o container"
-    ::= { containerShipParamEntry 3 }
+    ::= { containerShipParam 3 }
 
 nomep OBJECT-TYPE
     SYNTAX      DisplayString
@@ -84,7 +71,7 @@ nomep OBJECT-TYPE
     STATUS      current
     DESCRIPTION
 	"nome do container novo a ser criado"
-    ::= { containerShipParamEntry 4 }
+    ::= { containerShipParam 4 }
 
 
 
@@ -138,32 +125,16 @@ imagei OBJECT-TYPE
 --
 
 
-containerShipContainerTable OBJECT-TYPE
+containerShipContainer OBJECT-TYPE
     SYNTAX      SEQUENCE OF ContainerShipContainerTableEntry
     MAX-ACCESS  not-accessible
     STATUS      current
     DESCRIPTION
-	"grupo com a tabela de containers que foram criados"
+	"grupo com a tabela de containers que foram criados
+    Uma linha da tabela pelo menos 4 objetos: INDEX, Name,indice da image, Status (up, down,
+    removing, creating e changing)e Procesor (percentagem de utilizacao desse container)"
     ::= { containerSHIPMIB 3 }
 
-containerShipContainerEntry OBJECT-TYPE
-    SYNTAX      ContainerShipContainerTableEntry
-    MAX-ACCESS  not-accessible
-    STATUS      current
-    DESCRIPTION
-	"Uma linha da tabela pelo menos 4 objetos: INDEX, Name,indice da image, Status (up, down,
-    removing, creating e changing)e Procesor (percentagem de utilizacao desse container)"
-    INDEX   { indexc }
-    ::= { containerShipContainerTable 1 }
-
-
-ContainerShipContainerTableEntry ::= SEQUENCE {
-	indexc	Integer32,
-    namec DisplayString,
-	imagec DisplayString,
-    statusc DisplayString,
-    procesorc Integer32
-}
 
 
 indexc OBJECT-TYPE
@@ -172,7 +143,7 @@ indexc OBJECT-TYPE
     STATUS      current
     DESCRIPTION
 	"indice dos containers que foram criados"
-    ::= { containerShipContainerEntry 1 }
+    ::= { containerShipContainer 1 }
 
 namec OBJECT-TYPE
     SYNTAX      DisplayString
@@ -180,7 +151,7 @@ namec OBJECT-TYPE
     STATUS      current
     DESCRIPTION
 	"nome do container criado"
-    ::= { containerShipContainerEntry 2 }
+    ::= { containerShipContainer2 }
 
 imagec OBJECT-TYPE
     SYNTAX      DisplayString
@@ -188,7 +159,7 @@ imagec OBJECT-TYPE
     STATUS      current
     DESCRIPTION
 	"imagem do container criado"
-    ::= { containerShipContainerEntry 3 }
+    ::= { containerShipContainer 3 }
 
 statusc OBJECT-TYPE
     SYNTAX      DisplayString
@@ -196,14 +167,14 @@ statusc OBJECT-TYPE
     STATUS      current
     DESCRIPTION
 	"estado do container criado"
-    ::= { containerShipContainerEntry 4 }
+    ::= { containerShipContainer 4 }
 procesorc OBJECT-TYPE
     SYNTAX      Integer32 (1..32)
     MAX-ACCESS  read-create
     STATUS      current
     DESCRIPTION
 	"percentagem de uso do container criado"
-    ::= { containerShipContainerEntry 5 }
+    ::= { containerShipContainer 5 }
 
 --
 --containershipStatus
