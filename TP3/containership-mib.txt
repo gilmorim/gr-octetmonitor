@@ -27,7 +27,7 @@ containerShipParam OBJECT IDENTIFIER ::= { containerSHIPMIB 1 }
 containerShipContainer OBJECT IDENTIFIER ::= { containerSHIPMIB 3 }
 
 --
--- containerShipParam - não table 
+-- 1 containerShipParam - não table 
 -- TODO : READ - WRITE 
 --
 
@@ -65,7 +65,7 @@ nomep OBJECT-TYPE
 
 
 --
--- containerShipImageTable
+-- 2 containerShipImageTable
 --
 
 
@@ -110,12 +110,12 @@ imagei OBJECT-TYPE
 
 
 --
--- containerShipContainerTable
+-- 3 containerShipContainerTable
 --
 
 indexc OBJECT-TYPE
     SYNTAX      Integer32 (1..32)
-    MAX-ACCESS  not-accessible
+    MAX-ACCESS  read-write
     STATUS      current
     DESCRIPTION
 	"indice dos containers que foram criados"
@@ -123,15 +123,15 @@ indexc OBJECT-TYPE
 
 namec OBJECT-TYPE
     SYNTAX      DisplayString
-    MAX-ACCESS  read-create
+    MAX-ACCESS  read-write
     STATUS      current
     DESCRIPTION
 	"nome do container criado"
-    ::= { containerShipContainer2 }
+    ::= { containerShipContainer 2 }
 
 imagec OBJECT-TYPE
     SYNTAX      DisplayString
-    MAX-ACCESS  read-create
+    MAX-ACCESS  read-write
     STATUS      current
     DESCRIPTION
 	"imagem do container criado"
@@ -139,14 +139,14 @@ imagec OBJECT-TYPE
 
 statusc OBJECT-TYPE
     SYNTAX      DisplayString
-    MAX-ACCESS  read-create
+    MAX-ACCESS  read-write
     STATUS      current
     DESCRIPTION
 	"estado do container criado"
     ::= { containerShipContainer 4 }
 procesorc OBJECT-TYPE
     SYNTAX      Integer32 (1..32)
-    MAX-ACCESS  read-create
+    MAX-ACCESS  read-write
     STATUS      current
     DESCRIPTION
 	"percentagem de uso do container criado"
