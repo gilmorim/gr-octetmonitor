@@ -4,7 +4,6 @@ IMPORTS
     MODULE-IDENTITY, OBJECT-TYPE, Integer32, experimental, TimeTicks         
     FROM SNMPv2-SMI
       DisplayString   FROM SNMPv2-TC
-            
     ;
 
 
