@@ -1,0 +1,216 @@
+CONTAINERSHIP-MIB DEFINITIONS ::= BEGIN
+
+IMPORTS
+    MODULE-IDENTITY, OBJECT-TYPE, Integer32, experimental, TimeTicks         
+    FROM SNMPv2-SMI
+      DisplayString   FROM SNMPv2-TC
+            
+    ;
+
+
+containerSHIPMIB MODULE-IDENTITY
+LAST-UPDATED "201901230000Z"
+ORGANIZATION "Mieti - Gestao de Redes - Grupo 4"
+CONTACT-INFO    
+"postal:   Azurem  email:    mieti@eng.uminho.pt"
+DESCRIPTION
+"Example MIB objects for agent module example implementations"
+REVISION     "201901230000Z"
+DESCRIPTION
+	"Corrected notification example definitions"
+REVISION "201901220000Z"
+DESCRIPTION
+	"First draft"
+::={experimental 2019}
+
+containerShipParam OBJECT IDENTIFIER ::= { containerSHIPMIB 1 }
+containerShipContainer OBJECT IDENTIFIER ::= { containerSHIPMIB 3 }
+
+--
+-- containerShipParam - não table 
+-- TODO : READ - WRITE 
+--
+
+indexp OBJECT-TYPE
+    SYNTAX      Integer32 (1..32)
+    MAX-ACCESS  read-write
+    STATUS      current
+    DESCRIPTION
+	"indice que indentifica a linha da tabela "
+    ::= { containerShipParam 1 }
+indImagep OBJECT-TYPE
+    SYNTAX      Integer32 (1..32)
+    MAX-ACCESS  read-write
+    STATUS      current
+    DESCRIPTION
+	"indice da imagem do container novo a ser criado "
+    ::= { containerShipParam 2 }
+
+flagp OBJECT-TYPE
+    SYNTAX      Integer32 (1..32)
+    MAX-ACCESS  read-write
+    STATUS      current
+    DESCRIPTION
+	"flag do container novo a ser criado. Indica se devera ser criado o container"
+    ::= { containerShipParam 3 }
+
+nomep OBJECT-TYPE
+    SYNTAX      DisplayString
+    MAX-ACCESS  read-write
+    STATUS      current
+    DESCRIPTION
+	"nome do container novo a ser criado"
+    ::= { containerShipParam 4 }
+
+
+
+--
+-- containerShipImageTable
+--
+
+
+
+containerShipImageTable OBJECT-TYPE
+    SYNTAX      SEQUENCE OF ContainerShipImageTableEntry
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION
+	"grupo com a tabela de imagens disponiveis"
+    ::= { containerSHIPMIB 2 }
+
+containerShipImageEntry OBJECT-TYPE
+    SYNTAX      ContainerShipImageTableEntry
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION
+	"Uma linha da tabela pelo menos 2 objetos: INDEX e image"
+    INDEX   { indexi }
+    ::= { containerShipImageTable 1 }
+
+ContainerShipImageTableEntry ::= SEQUENCE {
+	indexi	Integer32,
+	imagei	DisplayString
+}
+
+indexi OBJECT-TYPE
+    SYNTAX      Integer32 (1..32)
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION
+	"indice "
+    ::= { containerShipImageEntry 1 }
+
+imagei OBJECT-TYPE
+    SYNTAX      DisplayString
+    MAX-ACCESS  read-write
+    STATUS      current
+    DESCRIPTION
+	"Imagem disponiveis"
+    ::= { containerShipImageEntry 2 }
+
+
+--
+-- containerShipContainerTable
+--
+
+indexc OBJECT-TYPE
+    SYNTAX      Integer32 (1..32)
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION
+	"indice dos containers que foram criados"
+    ::= { containerShipContainer 1 }
+
+namec OBJECT-TYPE
+    SYNTAX      DisplayString
+    MAX-ACCESS  read-create
+    STATUS      current
+    DESCRIPTION
+	"nome do container criado"
+    ::= { containerShipContainer2 }
+
+imagec OBJECT-TYPE
+    SYNTAX      DisplayString
+    MAX-ACCESS  read-create
+    STATUS      current
+    DESCRIPTION
+	"imagem do container criado"
+    ::= { containerShipContainer 3 }
+
+statusc OBJECT-TYPE
+    SYNTAX      DisplayString
+    MAX-ACCESS  read-create
+    STATUS      current
+    DESCRIPTION
+	"estado do container criado"
+    ::= { containerShipContainer 4 }
+procesorc OBJECT-TYPE
+    SYNTAX      Integer32 (1..32)
+    MAX-ACCESS  read-create
+    STATUS      current
+    DESCRIPTION
+	"percentagem de uso do container criado"
+    ::= { containerShipContainer 5 }
+
+--
+--containershipStatus
+--READ-WRITE table
+
+containershipStatusTable OBJECT-TYPE
+    SYNTAX SEQUENCE OF ContainerShipStatusTableEntry
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION
+	"Informacao estistica da utilizacao da mib"
+    ::= { containerSHIPMIB 4 }
+
+containerShipStatusEntry OBJECT-TYPE
+    SYNTAX      ContainerShipStatusTableEntry
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION
+	"Uma linha da tabela contem varias Informacoes estisticas sobre a utilizacao: id do utilizador, index, tempo de inicio e tempo final da utilizacao"
+    INDEX   { indexs }
+    ::= { containershipStatusTable 1 }
+
+
+ContainerShipStatusTableEntry ::= SEQUENCE {
+	indexs	Integer32,
+    userIds Integer32,
+	timeBegins  TimeTicks,
+    timeFinals TimeTicks 
+}
+
+
+indexs OBJECT-TYPE
+    SYNTAX      Integer32 (1..32)
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION
+	"indice que identifica a Informacao do container  "
+    ::= { containerShipStatusEntry 1 }
+
+userIds OBJECT-TYPE
+    SYNTAX      Integer32 (1..32)
+    MAX-ACCESS  read-create
+    STATUS      current
+    DESCRIPTION
+	"id do utilizador que criou o container"
+    ::= { containerShipStatusEntry 2 }
+
+timeBegins OBJECT-TYPE
+    SYNTAX      TimeTicks
+    MAX-ACCESS  read-create
+    STATUS      current
+    DESCRIPTION
+	"etiqueta que indica o inicio da criacao do container"
+    ::= { containerShipStatusEntry 3 }
+
+timeFinals OBJECT-TYPE
+    SYNTAX      TimeTicks
+    MAX-ACCESS  read-create
+    STATUS      current
+    DESCRIPTION
+	"etiqueta que indica o final do uso do container"
+    ::= { containerShipStatusEntry 4 }    
+END
