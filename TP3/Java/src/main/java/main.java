@@ -111,7 +111,6 @@ public class main {
     }
     public static void snmpgetindex(String input) {
         System.out.println("snmpgetindex");
-        final SNMPFunctions snmp = new SNMPFunctions();
         //snmp.getNext(input);
     }
 
