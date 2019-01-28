@@ -6,14 +6,13 @@ import org.snmp4j.event.ResponseEvent;
 import org.snmp4j.smi.*;
 import org.snmp4j.transport.DefaultUdpTransportMapping;
 
-import java.io.File;
+import java.io.*;
 import java.util.Scanner;
 import static java.lang.System.out;
 import java.util.*;
 import static java.lang.System.*;
 import static org.snmp4j.agent.mo.snmp.NotificationLogMib.NlmLogVariableValueTypeEnum.ipAddress;
 
-import java.io.IOException;
 import java.util.*;
 import java.util.regex.Pattern;
 
@@ -28,18 +27,42 @@ public class main {
         String input = scanner.nextLine();
         String[] parts = input.split(Pattern.quote("."));
         System.out.println(Arrays.toString(parts));
-
         String a = parts[6];
-        System.out.println(a);
-
+        List<String> list = new ArrayList<String>();
         File file = new File("containership-conf.txt");
+        BufferedReader reader = null;
+        try {
+            reader = new BufferedReader(new FileReader(file));
+            String text = null;
 
-        /*build community target*/
-        final CommunityTarget target = new CommunityTarget();
-        target.setCommunity(new OctetString(communityString));
-        target.setAddress(GenericAddress.parse("udp:"+ipAddress+"/"+port));
-        target.setRetries(retries);
-        target.setTimeout(timeout);
+            while ((text = reader.readLine()) != null) {
+                list.add(text);
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (reader != null) {
+                    reader.close();
+                }
+            } catch (IOException e) {
+            }
+        }
+        //1.3.6.1.3.2019.1.1.
+        //print out the list
+        String udp_port = list.get(0);
+        //Parse porta
+        String[] config = udp_port.split(Pattern.quote(" "));
+        String udp = config[1];
+        System.out.println(udp);
+        //parse da community string
+        String cms = list.get(1);
+        String[] community_s = cms.split(Pattern.quote(" "));
+        String community_string  = community_s[1];
+
+        System.out.println(community_string);
         switch (a){
             case "1":
                 funcaoparam(input);
@@ -89,11 +112,11 @@ public class main {
     public static void snmpgetindex(String input) {
         System.out.println("snmpgetindex");
         final SNMPFunctions snmp = new SNMPFunctions();
-        snmp.getNext(input);
+        //snmp.getNext(input);
     }
 
 
-    }
+
     public static void snmpgetimage() {
         System.out.println("snmpgetimage");
 

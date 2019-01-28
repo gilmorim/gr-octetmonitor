@@ -18,8 +18,7 @@ mib2dev.py --mib-source . --mib-source http://mibs.snmplabs.com/asn1/@mib@ --out
 snmpsimd.py --data-dir=./data --agent-udpv4-endpoint=127.0.0.1:1024
 
 
-snmpwalk -v2c -c rfid 127.0.0.1:1024
-
+snmpwalk -v2c -c CONTAINERSHIP-MIB localhost:1024 1.3.6.1.3.2019
 
 
 

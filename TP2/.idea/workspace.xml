@@ -2,9 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="405f351d-16df-4106-acfe-42c8fd4dbbe4" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../TP3/Colocar dados na mib/comandosimagens.txt" beforeDir="false" afterPath="$PROJECT_DIR$/../TP3/Colocar dados na mib/comandosimagens.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../TP3/Java/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../TP3/Java/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../TP3/Java/src/main/java/main.java" beforeDir="false" afterPath="$PROJECT_DIR$/../TP3/Java/src/main/java/main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../TP3/Java/target/classes/main.class" beforeDir="false" afterPath="$PROJECT_DIR$/../TP3/Java/target/classes/main.class" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/classes/" />
     <ignored path="$PROJECT_DIR$/target/" />
@@ -31,8 +31,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/java/TestClass.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="280">
-              <caret line="41" column="32" lean-forward="true" selection-start-line="35" selection-start-column="3" selection-end-line="41" selection-end-column="32" />
+            <state relative-caret-position="85">
+              <caret line="28" column="22" lean-forward="true" selection-start-line="28" selection-start-column="22" selection-end-line="28" selection-end-column="22" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -212,8 +212,7 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="0" y="25" width="1920" height="986" extended-state="7" />
-    <editor active="true" />
+    <frame x="0" y="25" width="1920" height="986" extended-state="6" />
     <layout>
       <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.15208112" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
@@ -299,8 +298,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/TestClass.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="280">
-          <caret line="41" column="32" lean-forward="true" selection-start-line="35" selection-start-column="3" selection-end-line="41" selection-end-column="32" />
+        <state relative-caret-position="85">
+          <caret line="28" column="22" lean-forward="true" selection-start-line="28" selection-start-column="22" selection-end-line="28" selection-end-column="22" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
