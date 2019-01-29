@@ -2,22 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="5902512d-e351-416c-89dd-eb7a6508cdbe" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/src/main/java/ManagedObjectFactory.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/SingleParam.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/SingleTableImage.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/UniversalVariables.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/objects/CustomManagedObject.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/objects/GeneralGreeting.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/objects/GeneralRandom.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bootCounter.agent" beforeDir="false" afterPath="$PROJECT_DIR$/bootCounter.agent" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/conf.agent" beforeDir="false" afterPath="$PROJECT_DIR$/conf.agent" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/Agent.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Agent.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/SNMPResponseData.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/main.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/Agent.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/Agent.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/SNMPResponseData.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/main.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/main.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/SingleCointainer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/SingleCointainer.java" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <ignored path="$PROJECT_DIR$/target/" />
@@ -55,8 +41,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/java/Agent.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="423">
-              <caret line="403" column="46" lean-forward="true" selection-start-line="403" selection-start-column="46" selection-end-line="403" selection-end-column="46" />
+            <state relative-caret-position="378">
+              <caret line="196" column="133" selection-start-line="196" selection-start-column="133" selection-end-line="196" selection-end-column="133" />
               <folding>
                 <element signature="imports" expanded="true" />
                 <element signature="e#6174#6182#0" expanded="true" />
@@ -69,10 +55,31 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/SingleCointainer.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="390">
+              <caret line="56" column="5" lean-forward="true" selection-start-line="56" selection-start-column="5" selection-end-line="56" selection-end-column="5" />
+              <folding>
+                <element signature="e#672#673#0" expanded="true" />
+                <element signature="e#706#707#0" expanded="true" />
+                <element signature="e#904#905#0" expanded="true" />
+                <element signature="e#940#941#0" expanded="true" />
+                <element signature="e#1050#1051#0" expanded="true" />
+                <element signature="e#1085#1086#0" expanded="true" />
+                <element signature="e#1213#1214#0" expanded="true" />
+                <element signature="e#1249#1250#0" expanded="true" />
+                <element signature="e#1378#1379#0" expanded="true" />
+                <element signature="e#1415#1416#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/SingleTableImage.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="377">
-              <caret line="39" column="20" selection-start-line="39" selection-start-column="20" selection-end-line="39" selection-end-column="20" />
+            <state relative-caret-position="330">
+              <caret line="22" column="22" lean-forward="true" selection-start-line="5" selection-start-column="3" selection-end-line="22" selection-end-column="22" />
               <folding>
                 <element signature="imports" expanded="true" />
                 <element signature="e#149#165#0" expanded="true" />
@@ -99,8 +106,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/SingleParam.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="75">
-              <caret line="5" selection-start-line="5" selection-end-line="24" selection-end-column="5" />
+            <state relative-caret-position="465">
+              <caret line="31" column="5" lean-forward="true" selection-start-line="5" selection-start-column="1" selection-end-line="31" selection-end-column="5" />
               <folding>
                 <element signature="imports" expanded="true" />
                 <element signature="e#714#715#0" expanded="true" />
@@ -121,19 +128,6 @@
               <caret line="9" column="13" selection-start-line="9" selection-start-column="13" selection-end-line="9" selection-end-column="13" />
               <folding>
                 <element signature="imports" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/UniversalVariables.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="375">
-              <caret line="25" column="7" selection-start-line="25" selection-start-column="7" selection-end-line="25" selection-end-column="7" />
-              <folding>
-                <element signature="e#600#601#0" expanded="true" />
-                <element signature="e#629#630#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -193,6 +187,7 @@
         <option value="$PROJECT_DIR$/src/main/java/SingleParam.java" />
         <option value="$PROJECT_DIR$/src/main/java/SingleTableImage.java" />
         <option value="$PROJECT_DIR$/src/main/java/SNMPResponseData.java" />
+        <option value="$PROJECT_DIR$/src/main/java/SingleCointainer.java" />
         <option value="$PROJECT_DIR$/src/main/java/Agent.java" />
       </list>
     </option>
@@ -324,9 +319,10 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="0" y="25" width="1920" height="986" extended-state="7" />
+    <frame x="0" y="25" width="1920" height="986" extended-state="6" />
+    <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.17342582" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.17342582" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Image Layers" order="2" />
       <window_info id="Designer" order="3" />
@@ -335,7 +331,7 @@
       <window_info id="Favorites" order="6" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.32905483" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.3243874" />
+      <window_info anchor="bottom" id="Run" order="2" visible="true" weight="0.3243874" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.3990665" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
@@ -369,13 +365,13 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/Agent.java</url>
-          <line>373</line>
+          <line>384</line>
           <properties />
           <option name="timeStamp" value="12" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/Agent.java</url>
-          <line>368</line>
+          <line>379</line>
           <properties />
           <option name="timeStamp" value="15" />
         </line-breakpoint>
@@ -468,39 +464,6 @@
     <entry file="file://$PROJECT_DIR$/Java.iml">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/SingleParam.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="75">
-          <caret line="5" selection-start-line="5" selection-end-line="24" selection-end-column="5" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#714#715#0" expanded="true" />
-            <element signature="e#747#748#0" expanded="true" />
-            <element signature="e#950#951#0" expanded="true" />
-            <element signature="e#984#985#0" expanded="true" />
-            <element signature="e#1095#1096#0" expanded="true" />
-            <element signature="e#1134#1135#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/SingleTableImage.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="377">
-          <caret line="39" column="20" selection-start-line="39" selection-start-column="20" selection-end-line="39" selection-end-column="20" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#149#165#0" expanded="true" />
-            <element signature="e#638#639#0" expanded="true" />
-            <element signature="e#681#682#0" expanded="true" />
-            <element signature="e#882#883#0" expanded="true" />
-            <element signature="e#900#901#0" expanded="true" />
-            <element signature="e#953#954#0" expanded="true" />
-            <element signature="e#979#980#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/MOScalarFactory.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="30">
@@ -549,10 +512,62 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/SingleTableImage.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="330">
+          <caret line="22" column="22" lean-forward="true" selection-start-line="5" selection-start-column="3" selection-end-line="22" selection-end-column="22" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#149#165#0" expanded="true" />
+            <element signature="e#638#639#0" expanded="true" />
+            <element signature="e#681#682#0" expanded="true" />
+            <element signature="e#882#883#0" expanded="true" />
+            <element signature="e#900#901#0" expanded="true" />
+            <element signature="e#953#954#0" expanded="true" />
+            <element signature="e#979#980#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/SingleParam.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="465">
+          <caret line="31" column="5" lean-forward="true" selection-start-line="5" selection-start-column="1" selection-end-line="31" selection-end-column="5" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#714#715#0" expanded="true" />
+            <element signature="e#747#748#0" expanded="true" />
+            <element signature="e#950#951#0" expanded="true" />
+            <element signature="e#984#985#0" expanded="true" />
+            <element signature="e#1095#1096#0" expanded="true" />
+            <element signature="e#1134#1135#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/SingleCointainer.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="390">
+          <caret line="56" column="5" lean-forward="true" selection-start-line="56" selection-start-column="5" selection-end-line="56" selection-end-column="5" />
+          <folding>
+            <element signature="e#672#673#0" expanded="true" />
+            <element signature="e#706#707#0" expanded="true" />
+            <element signature="e#904#905#0" expanded="true" />
+            <element signature="e#940#941#0" expanded="true" />
+            <element signature="e#1050#1051#0" expanded="true" />
+            <element signature="e#1085#1086#0" expanded="true" />
+            <element signature="e#1213#1214#0" expanded="true" />
+            <element signature="e#1249#1250#0" expanded="true" />
+            <element signature="e#1378#1379#0" expanded="true" />
+            <element signature="e#1415#1416#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/Agent.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="423">
-          <caret line="403" column="46" lean-forward="true" selection-start-line="403" selection-start-column="46" selection-end-line="403" selection-end-column="46" />
+        <state relative-caret-position="378">
+          <caret line="196" column="133" selection-start-line="196" selection-start-column="133" selection-end-line="196" selection-end-column="133" />
           <folding>
             <element signature="imports" expanded="true" />
             <element signature="e#6174#6182#0" expanded="true" />

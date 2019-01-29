@@ -163,7 +163,7 @@ public class Agent extends BaseAgent {
 		registerManagedObject(new MOScalar(new OID("1.3.6.1.3.2019.1.1.0"), MOAccessImpl.ACCESS_READ_ONLY, new OctetString(indexp)));
 		registerManagedObject(new MOScalar(new OID("1.3.6.1.3.2019.1.2.0"), MOAccessImpl.ACCESS_READ_ONLY, new OctetString(imagep)));
 		registerManagedObject(new MOScalar(new OID("1.3.6.1.3.2019.1.3.0"), MOAccessImpl.ACCESS_READ_ONLY, new OctetString(flagp)));
-		//Table
+		//Table of imagens
 		SingleTableImage TI = SingleTableImage.getInstance();
 		int size = TI.Get_size();
 			for (int j=0; j <size; j++) {
@@ -183,9 +183,19 @@ public class Agent extends BaseAgent {
 						builder.addRowValue(new OctetString(indImage));
 					}
 				registerManagedObject(builder.build());
+		//object of container
+		SingleCointainer C = SingleCointainer.getInstance();
+		String indexc = C.Get_Indexc();
+		String namec = C.Get_namec();
+		String imagec = C.Get_imagec();
+		String statusc = C.Get_statuscc();
+		String processorc = C.Get_procesorc();
+		registerManagedObject(new MOScalar(new OID("1.3.6.1.3.2019.3.1.0"), MOAccessImpl.ACCESS_READ_ONLY, new OctetString(indexc)));
+		registerManagedObject(new MOScalar(new OID("1.3.6.1.3.2019.3.2.0"), MOAccessImpl.ACCESS_READ_ONLY, new OctetString(namec)));
+		registerManagedObject(new MOScalar(new OID("1.3.6.1.3.2019.3.3.0"), MOAccessImpl.ACCESS_READ_ONLY, new OctetString(imagec)));
+		registerManagedObject(new MOScalar(new OID("1.3.6.1.3.2019.3.4.0"), MOAccessImpl.ACCESS_READ_ONLY, new OctetString(statusc)));
+		registerManagedObject(new MOScalar(new OID("1.3.6.1.3.2019.3.5.0"), MOAccessImpl.ACCESS_READ_ONLY, new OctetString(processorc)));
 
-
-			// Setup the client to use our newly started agent
 		}
 	}
 
@@ -256,19 +266,10 @@ public class Agent extends BaseAgent {
 		initparam();
 		initTableImage();
 		initContainer();
+		initTableStatus();
 		Agent agent = new Agent("127.0.0.1/" + porta);
 		agent.start();
 		agent.unregisterManagedObject(agent.getSnmpv2MIB());
-		//final OID sysDescr = new OID("1.3.6.1.3.2020.2");
-		//String customMibOid = "1.3.6.1.3.2019.1";
-		//System.out.println(sysDescr);
-		//agent.registerManagedObject(MOScalarFactory.createReadOnly(sysDescr,"Um camiao de putas e vinho "));
-		//agent.registerManagedObject(MOScalarFactory.createReadOnly(sysDescr, "merda"));
-		//agent.registerManagedObject(ManagedObjectFactory.createReadOnly(param, "costa e de aveiro "));
-		//agent.registerManagedObject(ManagedObjectFactory.createReadOnly(customMibOid, "o gil e agressivo"));
-
-
-		// Setup the client to use our newly started agent
 		while (true) {
 			System.out.println("Agent running...");
 			Thread.sleep(5000);
@@ -398,14 +399,43 @@ public class Agent extends BaseAgent {
 			} catch (IOException e) {
 			}
 		}
+		SingleCointainer C = SingleCointainer.getInstance();
 		for (int i = 0; i < lista_de_container.size(); i++) {
 			String varindimage = lista_de_container.get(i);
 			String[] varoid_temp = varindimage.split(Pattern.quote("."));
-			String oid_table = varoid_temp[6];
-			if(oid_table.equals("3")){
-
+			String oid_objecto = varoid_temp[6];
+			String oid_instancia = varoid_temp[7];
+			if(oid_objecto.equals("3")){
+				if(oid_instancia.equals("1")){
+					String[] array_oid = varindimage.split(Pattern.quote("|"));
+					String output = array_oid[2];
+					C.Put_Indexc(output);
+				}
+				if(oid_instancia.equals("2")){
+					String[] array_oid = varindimage.split(Pattern.quote("|"));
+					String output = array_oid[2];
+					C.Put_namec(output);
+				}
+				if(oid_instancia.equals("3")){
+					String[] array_oid = varindimage.split(Pattern.quote("|"));
+					String output = array_oid[2];
+					C.Put_imagec(output);
+				}
+				if(oid_instancia.equals("4")){
+					String[] array_oid = varindimage.split(Pattern.quote("|"));
+					String output = array_oid[2];
+					C.Put_statusc(output);
+				}
+				if(oid_instancia.equals("5")){
+					String[] array_oid = varindimage.split(Pattern.quote("|"));
+					String output = array_oid[2];
+					C.Put_procesorc(output);
+				}
 			}
 		}
 	}
+	public static void initTableStatus(){
+		
+	}
 }
-}
+
