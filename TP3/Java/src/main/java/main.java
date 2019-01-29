@@ -28,41 +28,7 @@ public class main {
         String[] parts = input.split(Pattern.quote("."));
         System.out.println(Arrays.toString(parts));
         String a = parts[6];
-        List<String> list = new ArrayList<String>();
-        File file = new File("containership-conf.txt");
-        BufferedReader reader = null;
-        try {
-            reader = new BufferedReader(new FileReader(file));
-            String text = null;
 
-            while ((text = reader.readLine()) != null) {
-                list.add(text);
-            }
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                if (reader != null) {
-                    reader.close();
-                }
-            } catch (IOException e) {
-            }
-        }
-        //1.3.6.1.3.2019.1.1.
-        //print out the list
-        String udp_port = list.get(0);
-        //Parse porta
-        String[] config = udp_port.split(Pattern.quote(" "));
-        String udp = config[1];
-        System.out.println(udp);
-        //parse da community string
-        String cms = list.get(1);
-        String[] community_s = cms.split(Pattern.quote(" "));
-        String community_string  = community_s[1];
-
-        System.out.println(community_string);
         switch (a){
             case "1":
                 funcaoparam(input);
