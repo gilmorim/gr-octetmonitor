@@ -48,13 +48,13 @@ EXERCICIO SOBRE CONSTRUÇÃO DE MIB
     ... eliminar os erros... um a um... editar, compilar, editar, compular...
 
     ... tratar tambem dos warnings (opcional) ...
-    $ smilint -s -m -l 6 EXERCICIO-RFID-MIB.txt
+    $ smilint -s -m -l 6 CONTAINERSHIP-MIB.txt
+
     ...
 
 4. Gerar dados para simular a MIB
 
-    $ mib2dev.py --mib-source . --mib-source http://mibs.snmplabs.com/asn1/@mib@ --output-file=./data/rfid.snmprec --table-size=3 --mib-module=EXERCICIO-RFID-MIB
-    ... vai produzir um ficheiro na pasta ./data com o ome rfid.snmprec
+    $ mib2dev.py --mib-source . --mib-source http://mibs.snmplabs.com/asn1/@mib@ --output-file=./data/CONTAINERSHIP-MIB.snmprec --table-size=3 --mib-module=CONTAINERSHIP-MIB
 
     (em alternativa usar o ficheiro de dados fornecido, baseado no enunciado)
     $ cat ./data/rfid.snmprec

@@ -1,21 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="5902512d-e351-416c-89dd-eb7a6508cdbe" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/src/main/java/SingleTableStatus.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bootCounter.agent" beforeDir="false" afterPath="$PROJECT_DIR$/bootCounter.agent" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/conf.agent" beforeDir="false" afterPath="$PROJECT_DIR$/conf.agent" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resultados.txt" beforeDir="false" afterPath="$PROJECT_DIR$/resultados.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/Agent.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Agent.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/SimpleSnmpClient.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/objects/GeneralGreeting.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/objects/GeneralRandom.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/Agent.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/Agent.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/SimpleSnmpClient.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/objects/GeneralGreeting.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/objects/GeneralRandom.class" beforeDir="false" />
-    </list>
+    <list default="true" id="5902512d-e351-416c-89dd-eb7a6508cdbe" name="Default Changelist" comment="" />
     <ignored path="$PROJECT_DIR$/out/" />
     <ignored path="$PROJECT_DIR$/target/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -347,7 +333,7 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="0" y="25" width="1920" height="986" extended-state="6" />
+    <frame x="0" y="25" width="1920" height="986" extended-state="7" />
     <editor active="true" />
     <layout>
       <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.17342582" />

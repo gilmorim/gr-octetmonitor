@@ -1,7 +1,7 @@
 CONTAINERSHIP-MIB DEFINITIONS ::= BEGIN
 
 IMPORTS
-    MODULE-IDENTITY, OBJECT-TYPE, Integer32, experimental, TimeTicks         
+    MODULE-IDENTITY, OBJECT-TYPE, Integer32, experimental, TimeTicks,Counter32, Counter64        
     FROM SNMPv2-SMI
       DisplayString   FROM SNMPv2-TC
     ;
@@ -52,13 +52,6 @@ flagp OBJECT-TYPE
 	"flag do container novo a ser criado. Indica se devera ser criado o container"
     ::= { containerShipParam 3 }
 
-nomep OBJECT-TYPE
-    SYNTAX      DisplayString
-    MAX-ACCESS  read-write
-    STATUS      current
-    DESCRIPTION
-	"nome do container novo a ser criado"
-    ::= { containerShipParam 4 }
 
 
 
@@ -108,7 +101,7 @@ imagei OBJECT-TYPE
 
 
 --
--- 3 containerShipContainerTable
+-- 3 containerShipContainer
 --
 
 indexc OBJECT-TYPE
@@ -124,7 +117,7 @@ namec OBJECT-TYPE
     MAX-ACCESS  read-write
     STATUS      current
     DESCRIPTION
-	"nome do container criado"
+	"nome do container criadowrite"
     ::= { containerShipContainer 2 }
 
 imagec OBJECT-TYPE
@@ -176,7 +169,8 @@ ContainerShipStatusTableEntry ::= SEQUENCE {
 	indexs	Integer32,
     userIds Integer32,
 	timeBegins  TimeTicks,
-    timeFinals TimeTicks 
+    timeFinals TimeTicks,
+    counterStatuss Counter64
 }
 
 
@@ -190,7 +184,7 @@ indexs OBJECT-TYPE
 
 userIds OBJECT-TYPE
     SYNTAX      Integer32 (1..32)
-    MAX-ACCESS  read-create
+    MAX-ACCESS  read-write
     STATUS      current
     DESCRIPTION
 	"id do utilizador que criou o container"
@@ -198,7 +192,7 @@ userIds OBJECT-TYPE
 
 timeBegins OBJECT-TYPE
     SYNTAX      TimeTicks
-    MAX-ACCESS  read-create
+    MAX-ACCESS  read-write
     STATUS      current
     DESCRIPTION
 	"etiqueta que indica o inicio da criacao do container"
@@ -206,9 +200,18 @@ timeBegins OBJECT-TYPE
 
 timeFinals OBJECT-TYPE
     SYNTAX      TimeTicks
-    MAX-ACCESS  read-create
+    MAX-ACCESS  read-write
     STATUS      current
     DESCRIPTION
 	"etiqueta que indica o final do uso do container"
-    ::= { containerShipStatusEntry 4 }    
+    ::= { containerShipStatusEntry 4 }  
+
+counterStatuss OBJECT-TYPE
+    SYNTAX Counter64
+    MAX-ACCESS read-only
+    STATUS current
+    DESCRIPTION
+    "contador numero de acessos a tabela"
+     ::= { containerShipStatusEntry 5 }  
+     
 END
