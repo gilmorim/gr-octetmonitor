@@ -186,7 +186,7 @@ public class Agent extends BaseAgent {
 				registerManagedObject(builder.build(indexes));
 			}
 		//object of container
-		/*SingleCointainer C = SingleCointainer.getInstance();
+		/*SingleCointainerTable C = SingleCointainerTable.getInstance();
 		String indexc = C.Get_Indexc();
 		String namec = C.Get_namec();
 		String imagec = C.Get_imagec();
@@ -394,7 +394,7 @@ public class Agent extends BaseAgent {
 
 	public static void initContainerTable() {
 		//Ficheiro de configuração das imagens
-		/* List<String> lista_de_container = new ArrayList<String>();
+		List<String> lista_de_container = new ArrayList<String>();
 		File file = new File("resultados.txt");
 		BufferedReader reader = null;
 		try {
@@ -416,7 +416,8 @@ public class Agent extends BaseAgent {
 			} catch (IOException e) {
 			}
 		}
-		SingleCointainer C = SingleCointainer.getInstance();
+		int counter =0;
+		SingleCointainerTable C = SingleCointainerTable.getInstance();
 		for (int i = 0; i < lista_de_container.size(); i++) {
 			String varindimage = lista_de_container.get(i);
 			String[] varoid_temp = varindimage.split(Pattern.quote("."));
@@ -424,14 +425,16 @@ public class Agent extends BaseAgent {
 			String oid_instancia = varoid_temp[7];
 			if(oid_objecto.equals("3")){
 				if(oid_instancia.equals("1")){
+					counter++;
 					String[] array_oid = varindimage.split(Pattern.quote("|"));
 					String output = array_oid[2];
-					C.Put_Indexc(output);
+					String index = array_oid[0];
+					C.Put_ID_CointainerTable_Index(counter, output);
 				}
 				if(oid_instancia.equals("2")){
 					String[] array_oid = varindimage.split(Pattern.quote("|"));
 					String output = array_oid[2];
-					C.Put_namec(output);
+					C.Put_ID_CointainerTable_Name(,output);
 				}
 				if(oid_instancia.equals("3")){
 					String[] array_oid = varindimage.split(Pattern.quote("|"));
@@ -449,7 +452,7 @@ public class Agent extends BaseAgent {
 					C.Put_procesorc(output);
 				}
 			}
-		} */
+		}
 	}
 	public static void initTableStatus(){
 
