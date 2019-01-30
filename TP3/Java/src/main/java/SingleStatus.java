@@ -1,32 +1,38 @@
 import java.util.HashMap;
 import java.util.Map;
 
-public class SingleTableStatus {
-    private static SingleTableStatus single_instance = null;
-
+public class SingleStatus {
+    private static SingleStatus single_instance = null;
+    private Map<Integer,String> Inteiro_TableStatus_ID = new HashMap<Integer, String>();
     private Map<String,String> ID_TableStatus_userIds = new HashMap<String, String>();
     private Map<String,String> ID_TableStatus_TimeBegins = new HashMap<String, String>();
     private Map<String,String> ID_TableStatus_TimeFinals = new HashMap<String, String>();
-    private Map<String,String> ID_TableStatus_counter = new HashMap<String, String>();
+    private Map<String,Integer> ID_TableStatus_counter = new HashMap<String, Integer>();
 
     public int size_users;
     public int size_TimeBegins;
     public int size_Timefinal;
 
     // private constructor restricted to this class itself
-    private SingleTableStatus()
+    private SingleStatus()
     {
     }
 
     // static method to create instance of Singleton class
-    public static SingleTableStatus getInstance()
+    public static SingleStatus getInstance()
     {
         if (single_instance == null)
-            single_instance = new SingleTableStatus();
+            single_instance = new SingleStatus();
 
         return single_instance;
     }
-
+    public void Put_Int_ID (int in, String ID){
+        Inteiro_TableStatus_ID.put(in, ID);
+    }
+    public String Get_ID_by_inteiro (int in){
+        String ID_new = Inteiro_TableStatus_ID.get(in);
+        return ID_new;
+    }
     public void Put_ID_userIds (String Id, String userIds_new) {
         ID_TableStatus_userIds.put(Id, userIds_new);
     }
@@ -54,12 +60,12 @@ public class SingleTableStatus {
     }
 
 
-    public void Put_ID_counter (String Id, String counter_new) {
+    public void Put_ID_counter (String Id, int counter_new) {
         ID_TableStatus_counter.put(Id, counter_new);
     }
 
-    public String Get_counter_by_id (String Id){
-        String counter_new = ID_TableStatus_counter.get(Id);
+    public int Get_counter_by_id (String Id){
+        int counter_new = ID_TableStatus_counter.get(Id);
         return counter_new;
     }
 

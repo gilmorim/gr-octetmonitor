@@ -1,5 +1,3 @@
-import org.ietf.jgss.Oid;
-
 import org.snmp4j.TransportMapping;
 import org.snmp4j.agent.*;
 import org.snmp4j.agent.mo.MOAccessImpl;
@@ -15,7 +13,6 @@ import org.snmp4j.security.SecurityModel;
 import org.snmp4j.security.USM;
 import org.snmp4j.smi.*;
 import org.snmp4j.transport.TransportMappings;
-import org.snmp4j.*;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -189,51 +186,33 @@ public class Agent extends BaseAgent {
 				registerManagedObject(builder.build(indexes));
 			}
 		//object of container
-		SingleCointainer C = SingleCointainer.getInstance();
+		/*SingleCointainer C = SingleCointainer.getInstance();
 		String indexc = C.Get_Indexc();
 		String namec = C.Get_namec();
 		String imagec = C.Get_imagec();
 		String statusc = C.Get_statuscc();
-		String processorc = C.Get_procesorc();
-		/*registerManagedObject(new MOScalar(new OID("1.3.6.1.3.2019.3.1.0"), MOAccessImpl.ACCESS_READ_ONLY, new OctetString(indexc)));
-		registerManagedObject(new MOScalar(new OID("1.3.6.1.3.2019.3.2.0"), MOAccessImpl.ACCESS_READ_ONLY, new OctetString(namec)));
-		registerManagedObject(new MOScalar(new OID("1.3.6.1.3.2019.3.3.0"), MOAccessImpl.ACCESS_READ_ONLY, new OctetString(imagec)));
-		registerManagedObject(new MOScalar(new OID("1.3.6.1.3.2019.3.4.0"), MOAccessImpl.ACCESS_READ_ONLY, new OctetString(statusc)));
-		registerManagedObject(new MOScalar(new OID("1.3.6.1.3.2019.3.5.0"), MOAccessImpl.ACCESS_READ_ONLY, new OctetString(processorc)));*/
-		//Tablestatus
-		//userids
-		/*
-		SingleTableStatus TS = SingleTableStatus.getInstance();
-		int size_of_users = TS.Get_sizeusers();
-		for (int j=0; j <size_of_users; j++) {
-			String oid = String.valueOf(j);
-			//registerManagedObject(new MOScalar(new OID("1.3.6.1.3.2019.2.1.1."+oid+".0"), MOAccessImpl.ACCESS_READ_ONLY, new OctetString(String.valueOf(j))));
+		String processorc = C.Get_procesorc();*/
+		/**/
+		//status
 
-			MOTableBuilder builder_status = new MOTableBuilder(new OID("1.3.6.1.3.2019.4.1."))
-					.addColumnType(SMIConstants.SYNTAX_INTEGER, MOAccessImpl.ACCESS_READ_ONLY);
-			// Normally you would begin loop over you two domain objects her
-			//next row
-			builder_status.addColumnType(SMIConstants.SYNTAX_OCTET_STRING, MOAccessImpl.ACCESS_READ_ONLY);
-			builder_status.addColumnType(SMIConstants.SYNTAX_TIMETICKS, MOAccessImpl.ACCESS_READ_ONLY);
-			builder_status.addColumnType(SMIConstants.SYNTAX_TIMETICKS, MOAccessImpl.ACCESS_READ_ONLY);
-			builder_status.addColumnType(SMIConstants.SYNTAX_COUNTER64, MOAccessImpl.ACCESS_READ_ONLY);
-			for (int k = 0; k < size_of_users; k++) {
-				builder_status.addRowValue(new Integer32(k+1));
-				String userids = TS.Get_userIds_by_id(String.valueOf(k+1));
-				builder_status.addRowValue(new OctetString(userids));
-				String timesticksinit = TS.Get_Timebegins_by_id(String.valueOf(k+1));
-				TimeTicks timeinit = new TimeTicks(Long.parseLong(timesticksinit));
-				builder_status.addRowValue(new TimeTicks(timeinit));
-				String timesticksfinal = TS.Get_Timefinals_by_id(String.valueOf(k+1));
-				TimeTicks timefinal = new TimeTicks(Long.parseLong(timesticksfinal));
-				builder_status.addRowValue(new TimeTicks(timefinal));
-				String counter = TS.Get_counter_by_id(String.valueOf(k+1));
-				int counter_int = Integer.parseInt(counter);
-				builder_status.addRowValue(new Counter64(counter_int));
+		SingleStatus S = SingleStatus.getInstance();
 
+			for (int k = 0; k < 1; k++) {
+			String indexs = S.Get_ID_by_inteiro(0);
+			String userids = S.Get_userIds_by_id(String.valueOf(k));
+			String timesticksinit = S.Get_Timebegins_by_id(String.valueOf(k));
+			TimeTicks timeinit = new TimeTicks(Long.parseLong(timesticksinit));
+			String timesticksfinal = S.Get_Timefinals_by_id(String.valueOf(k));
+			TimeTicks timefinal = new TimeTicks(Long.parseLong(timesticksfinal));
+			int counter = S.Get_counter_by_id(String.valueOf(k));
+			//int counter_int = Integer.valueOf(counter);
+			registerManagedObject(new MOScalar(new OID("1.3.6.1.3.2019.4.1.0"), MOAccessImpl.ACCESS_READ_ONLY, new OctetString(indexs)));
+			registerManagedObject(new MOScalar(new OID("1.3.6.1.3.2019.4.2.0"), MOAccessImpl.ACCESS_READ_ONLY, new OctetString(userids)));
+			registerManagedObject(new MOScalar(new OID("1.3.6.1.3.2019.4.3.0"), MOAccessImpl.ACCESS_READ_ONLY, new TimeTicks(timeinit)));
+			registerManagedObject(new MOScalar(new OID("1.3.6.1.3.2019.4.4.0"), MOAccessImpl.ACCESS_READ_ONLY, new TimeTicks(timefinal)));
+			registerManagedObject(new MOScalar(new OID("1.3.6.1.3.2019.4.5.0"), MOAccessImpl.ACCESS_READ_ONLY, new Counter64(counter)));
 			}
-			registerManagedObject(builder_status.build());
-		}*/
+
 
 	}
 
@@ -473,7 +452,7 @@ public class Agent extends BaseAgent {
 		} */
 	}
 	public static void initTableStatus(){
-/*
+
 		int countador_de_users=0;
 		int contador_Timestick_inicial =0;
 		int contador_Timestick_final =0;
@@ -500,58 +479,67 @@ public class Agent extends BaseAgent {
 			} catch (IOException e) {
 			}
 		}
-		SingleTableStatus TS = SingleTableStatus.getInstance();
+		SingleStatus S = SingleStatus.getInstance();
 
 		for (int i = 0; i < lista_de_tablestatus.size(); i++) {
 			String linhadoficheiro = lista_de_tablestatus.get(i);
 			String[] oidporpontos = linhadoficheiro.split(Pattern.quote("."));
-			String oid_table = oidporpontos[6];
-			String oid_coluna = oidporpontos[8];
-			if (oid_table.equals("4")) {
+			String oid_obje = oidporpontos[6];
+			String oid_insta = oidporpontos[7];
+			if (oid_obje.equals("4")) {
 				//se for userids
-				if (oid_coluna.equals("2")) {
-					countador_de_users++;
-					String oid_index_bruto = oidporpontos[9];
+				if (oid_insta.equals("1")) {
+					//buscar index
+					String oid_index_bruto = oidporpontos[8];
 					String[] oid_index_barras = oid_index_bruto.split(Pattern.quote("|"));
 					String oid_index = oid_index_barras[0];
-					System.out.println(oid_index);
+					//buscar valor do index
+					String index_value = oid_index_barras[2];
+					S.Put_Int_ID(0,index_value);
+				}
+				if (oid_insta.equals("2")) {
+					//buscar index
+					String oid_index_bruto = oidporpontos[8];
+					String[] oid_index_barras = oid_index_bruto.split(Pattern.quote("|"));
+					String oid_index = oid_index_barras[0];
+					//buscar valor user
 					String userids_value = oid_index_barras[2];
-					System.out.println(userids_value);
-					TS.Put_ID_userIds(oid_index,userids_value);
+					S.Put_ID_userIds(oid_index,userids_value);
 				}
-				if (oid_coluna.equals("3")) {
-					String oid_index_bruto = oidporpontos[9];
+				if (oid_insta.equals("3")) {
+					//buscar index
+					String oid_index_bruto = oidporpontos[8];
 					String[] oid_index_barras = oid_index_bruto.split(Pattern.quote("|"));
 					String oid_index = oid_index_barras[0];
-					System.out.println(oid_index);
+					//buscar valor timestick inicial
 					String timestickinicial = oid_index_barras[2];
-					System.out.println(timestickinicial);
-					TS.Put_ID_Timebegins(oid_index,timestickinicial);
+					S.Put_ID_Timebegins(oid_index,timestickinicial);
 				}
-				if (oid_coluna.equals("4")) {
-					String oid_index_bruto = oidporpontos[9];
+				if (oid_insta.equals("4")) {
+					//buscar index
+					String oid_index_bruto = oidporpontos[8];
 					String[] oid_index_barras = oid_index_bruto.split(Pattern.quote("|"));
 					String oid_index = oid_index_barras[0];
-					System.out.println(oid_index);
+					//buscar valor timestick final
 					String timestickfinal = oid_index_barras[2];
-					TS.Put_ID_Timefinals(oid_index,timestickfinal);
+					S.Put_ID_Timefinals(oid_index,timestickfinal);
 
 				}
 
-				if (oid_coluna.equals("5")) {
-					String oid_index_bruto = oidporpontos[9];
+				if (oid_insta.equals("5")) {
+					//buscar index
+					String oid_index_bruto = oidporpontos[8];
 					String[] oid_index_barras = oid_index_bruto.split(Pattern.quote("|"));
 					String oid_index = oid_index_barras[0];
-					System.out.println(oid_index);
+					//buscar valor counter
 					String counter_value = oid_index_barras[2];
-					TS.Put_ID_counter(oid_index,counter_value);
+					int counter_value_int = Integer.parseInt(counter_value);
+					S.Put_ID_counter(oid_index,counter_value_int);
 
 				}
 		}
-		TS.Put_sizeusers(countador_de_users);
-		TS.Put_Sizetimesticksinicial(contador_Timestick_inicial);
-		TS.Put_Sizetimesticksfinal(contador_Timestick_final);
-		} */
+
+		}
 	}
 }
 
