@@ -167,9 +167,7 @@ public class Agent extends BaseAgent {
 		SingleTableImage TI = SingleTableImage.getInstance();
 		int size = TI.Get_size();
 			for (int j=0; j <size; j++) {
-				String oid = String.valueOf(j);
 				//registerManagedObject(new MOScalar(new OID("1.3.6.1.3.2019.2.1.1."+oid+".0"), MOAccessImpl.ACCESS_READ_ONLY, new OctetString(String.valueOf(j))));
-
 				MOTableBuilder builder = new MOTableBuilder(new OID("1.3.6.1.3.2019.2.1."))
 						.addColumnType(SMIConstants.SYNTAX_INTEGER, MOAccessImpl.ACCESS_READ_ONLY);
 				// Normally you would begin loop over you two domain objects her
@@ -178,12 +176,17 @@ public class Agent extends BaseAgent {
 				//next row
 				builder.addColumnType(SMIConstants.SYNTAX_OCTET_STRING, MOAccessImpl.ACCESS_READ_ONLY);
 				for (int k = 0; k < size; k++) {
-					builder.addRowValue(new Integer32(k));
-					String indImage = TI.Get_Image_by_id(String.valueOf(k));
+					String id = TI.Get_ID_by_inteiroseq(k);
+					builder.addRowValue(new Integer32(Integer.parseInt(id)));
+					String indImage = TI.Get_Image_by_id(id);
 					builder.addRowValue(new OctetString(indImage));
 				}
-
-				registerManagedObject(builder.build());
+				int[] indexes = new int[size];
+				for (int k = 0; k < size; k++) {
+					String id = TI.Get_ID_by_inteiroseq(k);
+					indexes[k]=Integer.parseInt(id);
+				}
+				registerManagedObject(builder.build(indexes));
 			}
 		//object of container
 		SingleCointainer C = SingleCointainer.getInstance();
@@ -192,13 +195,14 @@ public class Agent extends BaseAgent {
 		String imagec = C.Get_imagec();
 		String statusc = C.Get_statuscc();
 		String processorc = C.Get_procesorc();
-		registerManagedObject(new MOScalar(new OID("1.3.6.1.3.2019.3.1.0"), MOAccessImpl.ACCESS_READ_ONLY, new OctetString(indexc)));
+		/*registerManagedObject(new MOScalar(new OID("1.3.6.1.3.2019.3.1.0"), MOAccessImpl.ACCESS_READ_ONLY, new OctetString(indexc)));
 		registerManagedObject(new MOScalar(new OID("1.3.6.1.3.2019.3.2.0"), MOAccessImpl.ACCESS_READ_ONLY, new OctetString(namec)));
 		registerManagedObject(new MOScalar(new OID("1.3.6.1.3.2019.3.3.0"), MOAccessImpl.ACCESS_READ_ONLY, new OctetString(imagec)));
 		registerManagedObject(new MOScalar(new OID("1.3.6.1.3.2019.3.4.0"), MOAccessImpl.ACCESS_READ_ONLY, new OctetString(statusc)));
-		registerManagedObject(new MOScalar(new OID("1.3.6.1.3.2019.3.5.0"), MOAccessImpl.ACCESS_READ_ONLY, new OctetString(processorc)));
+		registerManagedObject(new MOScalar(new OID("1.3.6.1.3.2019.3.5.0"), MOAccessImpl.ACCESS_READ_ONLY, new OctetString(processorc)));*/
 		//Tablestatus
 		//userids
+		/*
 		SingleTableStatus TS = SingleTableStatus.getInstance();
 		int size_of_users = TS.Get_sizeusers();
 		for (int j=0; j <size_of_users; j++) {
@@ -229,7 +233,7 @@ public class Agent extends BaseAgent {
 
 			}
 			registerManagedObject(builder_status.build());
-		}
+		}*/
 
 	}
 
@@ -299,7 +303,7 @@ public class Agent extends BaseAgent {
 		System.out.println(community_string);
 		initparam();
 		initTableImage();
-		initContainer();
+		initContainerTable();
 		initTableStatus();
 		Agent agent = new Agent("127.0.0.1/" + porta);
 		agent.start();
@@ -402,16 +406,16 @@ public class Agent extends BaseAgent {
 					String[]index4 = index3.split(Pattern.quote("."));
 					String index5 = index4[9];
 					TI.Put_ID_Image(index5,indImage_value);
-
+					TI.Put_Intseq_ID(count-1, index5);
 				}
 			}
 		}
 		TI.Put_size(count);
 	}
 
-	public static void initContainer() {
+	public static void initContainerTable() {
 		//Ficheiro de configuração das imagens
-		List<String> lista_de_container = new ArrayList<String>();
+		/* List<String> lista_de_container = new ArrayList<String>();
 		File file = new File("resultados.txt");
 		BufferedReader reader = null;
 		try {
@@ -466,10 +470,10 @@ public class Agent extends BaseAgent {
 					C.Put_procesorc(output);
 				}
 			}
-		}
+		} */
 	}
 	public static void initTableStatus(){
-
+/*
 		int countador_de_users=0;
 		int contador_Timestick_inicial =0;
 		int contador_Timestick_final =0;
@@ -547,7 +551,7 @@ public class Agent extends BaseAgent {
 		TS.Put_sizeusers(countador_de_users);
 		TS.Put_Sizetimesticksinicial(contador_Timestick_inicial);
 		TS.Put_Sizetimesticksfinal(contador_Timestick_final);
-		}
+		} */
 	}
 }
 

@@ -78,14 +78,14 @@ public class MOTableBuilder {
 		return this;
 	}
 
-	public MOTable build() {
+	public MOTable build(int[] indexes) {
 		DefaultMOTable ifTable = new DefaultMOTable(tableRootOid, indexDef,
 				columns.toArray(new MOColumn[0]));
 		MOMutableTableModel model = (MOMutableTableModel) ifTable.getModel();
-		int i = 1;
+		int i = 0;
 		
 		for (Variable[] variables : tableRows) {
-			model.addRow(new DefaultMOMutableRow2PC(new OID(String.valueOf(i)),
+			model.addRow(new DefaultMOMutableRow2PC(new OID(String.valueOf(indexes[i])),
 					variables));
 			i++;
 		}

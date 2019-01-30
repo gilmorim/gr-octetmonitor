@@ -6,6 +6,7 @@ public class SingleTableImage {
     private static SingleTableImage single_instance = null;
 
     private Map<String,String> ID_TableImage_imagem = new HashMap<String, String>();
+    private Map<Integer,String> Intseq_TableImgage_ID = new HashMap<Integer, String>();
     public int size;
 
 
@@ -31,6 +32,15 @@ public class SingleTableImage {
         String Image_new = ID_TableImage_imagem.get(Id);
         return Image_new;
     }
+
+    public void Put_Intseq_ID(int inteiro, String Id){
+        Intseq_TableImgage_ID.put(inteiro,Id);
+    }
+    public String Get_ID_by_inteiroseq (int inteiro){
+        String ID_new = Intseq_TableImgage_ID.get(inteiro);
+        return ID_new;
+    }
+
 
     public void Put_size(int size_new){
         this.size=size_new;
