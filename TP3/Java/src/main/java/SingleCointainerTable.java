@@ -3,6 +3,7 @@ import java.util.Map;
 
 public class SingleCointainerTable {
     private static SingleCointainerTable single_instance = null;
+    public int size;
 
     private Map<Integer,String> ID_CointainerTable_Index = new HashMap<Integer, String>();
     private Map<String,String> ID_CointainerTable_Name = new HashMap<String, String>();
@@ -28,7 +29,7 @@ public class SingleCointainerTable {
     public void Put_ID_CointainerTable_Index(int ID, String Index){
         ID_CointainerTable_Index.put(ID,Index);
     }
-    public String Get_Index_by_the_ID(String ID){
+    public String Get_Index_by_the_ID(int ID){
         return ID_CointainerTable_Index.get(ID);
     }
     public void Put_ID_CointainerTable_Name(String ID, String Name){
@@ -54,5 +55,12 @@ public class SingleCointainerTable {
     }
     public String Get_Processor_by_ID(String ID){
         return ID_CointainerTable_Processor.get(ID);
+    }
+    public void Put_size(int size_new){
+        this.size=size_new;
+    }
+
+    public int Get_size(){
+        return size;
     }
 }

@@ -185,14 +185,37 @@ public class Agent extends BaseAgent {
 				}
 				registerManagedObject(builder.build(indexes));
 			}
-		//object of container
-		/*SingleCointainerTable C = SingleCointainerTable.getInstance();
-		String indexc = C.Get_Indexc();
-		String namec = C.Get_namec();
-		String imagec = C.Get_imagec();
-		String statusc = C.Get_statuscc();
-		String processorc = C.Get_procesorc();*/
-		/**/
+		//Table container
+		SingleCointainerTable C = SingleCointainerTable.getInstance();
+		int sizec = C.Get_size();
+		for (int j=0; j <sizec; j++) {
+			//registerManagedObject(new MOScalar(new OID("1.3.6.1.3.2019.2.1.1."+oid+".0"), MOAccessImpl.ACCESS_READ_ONLY, new OctetString(String.valueOf(j))));
+			MOTableBuilder builder = new MOTableBuilder(new OID("1.3.6.1.3.2019.3.1."))
+					.addColumnType(SMIConstants.SYNTAX_INTEGER, MOAccessImpl.ACCESS_READ_ONLY);
+			builder.addColumnType(SMIConstants.SYNTAX_OCTET_STRING, MOAccessImpl.ACCESS_READ_ONLY);
+			builder.addColumnType(SMIConstants.SYNTAX_OCTET_STRING, MOAccessImpl.ACCESS_READ_ONLY);
+			builder.addColumnType(SMIConstants.SYNTAX_OCTET_STRING, MOAccessImpl.ACCESS_READ_ONLY);
+			builder.addColumnType(SMIConstants.SYNTAX_INTEGER, MOAccessImpl.ACCESS_READ_ONLY);
+
+			for (int k = 0; k < sizec; k++) {
+				String id = C.Get_Index_by_the_ID(k+1);
+				builder.addRowValue(new Integer32(Integer.parseInt(id)));
+				String namec = C.Get_Name_by_ID(id);
+				builder.addRowValue(new OctetString(namec));
+				String imagec = C.Get_Image_by_ID(id);
+				builder.addRowValue(new OctetString(imagec));
+				String statusc = C.Get_Status_by_ID(id);
+				builder.addRowValue(new OctetString(statusc));
+				String processorc = C.Get_Processor_by_ID(id);
+				builder.addRowValue(new Integer32(Integer.parseInt(processorc)));
+			}
+			int[] indexes = new int[sizec];
+			for (int k = 0; k < sizec; k++) {
+				String id = C.Get_Index_by_the_ID(k+1);
+				indexes[k]=Integer.parseInt(id);
+			}
+			registerManagedObject(builder.build(indexes));
+		}
 		//status
 
 		SingleStatus S = SingleStatus.getInstance();
@@ -422,7 +445,7 @@ public class Agent extends BaseAgent {
 			String varindimage = lista_de_container.get(i);
 			String[] varoid_temp = varindimage.split(Pattern.quote("."));
 			String oid_objecto = varoid_temp[6];
-			String oid_instancia = varoid_temp[7];
+			String oid_instancia = varoid_temp[8];
 			if(oid_objecto.equals("3")){
 				if(oid_instancia.equals("1")){
 					counter++;
@@ -432,26 +455,37 @@ public class Agent extends BaseAgent {
 					C.Put_ID_CointainerTable_Index(counter, output);
 				}
 				if(oid_instancia.equals("2")){
-					String[] array_oid = varindimage.split(Pattern.quote("|"));
+					String oid_partefinal = varoid_temp[9];
+
+					String[] array_oid = oid_partefinal.split(Pattern.quote("|"));
 					String output = array_oid[2];
-					C.Put_ID_CointainerTable_Name(,output);
+					String index = array_oid[0];
+					C.Put_ID_CointainerTable_Name(index,output);
 				}
 				if(oid_instancia.equals("3")){
-					String[] array_oid = varindimage.split(Pattern.quote("|"));
+					String oid_partefinal = varoid_temp[9];
+					String[] array_oid = oid_partefinal.split(Pattern.quote("|"));
 					String output = array_oid[2];
-					C.Put_imagec(output);
+					String index = array_oid[0];
+					C.Put_ID_CointainerTable_Image(index,output);
 				}
 				if(oid_instancia.equals("4")){
-					String[] array_oid = varindimage.split(Pattern.quote("|"));
+					String oid_partefinal = varoid_temp[9];
+					String[] array_oid = oid_partefinal.split(Pattern.quote("|"));
 					String output = array_oid[2];
-					C.Put_statusc(output);
+					String index = array_oid[0];
+					C.Put_ID_CointainerTable_Status(index,output);
 				}
 				if(oid_instancia.equals("5")){
-					String[] array_oid = varindimage.split(Pattern.quote("|"));
+					String oid_partefinal = varoid_temp[9];
+					String[] array_oid = oid_partefinal.split(Pattern.quote("|"));
 					String output = array_oid[2];
-					C.Put_procesorc(output);
+					String index = array_oid[0];
+					C.Put_ID_CointainerTable_Processor(index,output);
 				}
 			}
+			C.Put_size(counter);
+
 		}
 	}
 	public static void initTableStatus(){
