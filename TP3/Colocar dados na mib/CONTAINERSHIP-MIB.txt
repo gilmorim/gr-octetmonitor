@@ -214,4 +214,5 @@ counterStatuss OBJECT-TYPE
     "contador numero de acessos a tabela"
      ::= { containerShipStatusEntry 5 }  
      
+     
 END

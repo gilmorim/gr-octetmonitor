@@ -212,6 +212,7 @@ public class Agent extends BaseAgent {
 			builder_status.addColumnType(SMIConstants.SYNTAX_OCTET_STRING, MOAccessImpl.ACCESS_READ_ONLY);
 			builder_status.addColumnType(SMIConstants.SYNTAX_TIMETICKS, MOAccessImpl.ACCESS_READ_ONLY);
 			builder_status.addColumnType(SMIConstants.SYNTAX_TIMETICKS, MOAccessImpl.ACCESS_READ_ONLY);
+			builder_status.addColumnType(SMIConstants.SYNTAX_COUNTER64, MOAccessImpl.ACCESS_READ_ONLY);
 			for (int k = 0; k < size_of_users; k++) {
 				builder_status.addRowValue(new Integer32(k+1));
 				String userids = TS.Get_userIds_by_id(String.valueOf(k+1));
@@ -222,6 +223,10 @@ public class Agent extends BaseAgent {
 				String timesticksfinal = TS.Get_Timefinals_by_id(String.valueOf(k+1));
 				TimeTicks timefinal = new TimeTicks(Long.parseLong(timesticksfinal));
 				builder_status.addRowValue(new TimeTicks(timefinal));
+				String counter = TS.Get_counter_by_id(String.valueOf(k+1));
+				int counter_int = Integer.parseInt(counter);
+				builder_status.addRowValue(new Counter64(counter_int));
+
 			}
 			registerManagedObject(builder_status.build());
 		}
@@ -511,7 +516,6 @@ public class Agent extends BaseAgent {
 					TS.Put_ID_userIds(oid_index,userids_value);
 				}
 				if (oid_coluna.equals("3")) {
-					contador_Timestick_inicial++;
 					String oid_index_bruto = oidporpontos[9];
 					String[] oid_index_barras = oid_index_bruto.split(Pattern.quote("|"));
 					String oid_index = oid_index_barras[0];
@@ -521,13 +525,22 @@ public class Agent extends BaseAgent {
 					TS.Put_ID_Timebegins(oid_index,timestickinicial);
 				}
 				if (oid_coluna.equals("4")) {
-					contador_Timestick_final++;
 					String oid_index_bruto = oidporpontos[9];
 					String[] oid_index_barras = oid_index_bruto.split(Pattern.quote("|"));
 					String oid_index = oid_index_barras[0];
 					System.out.println(oid_index);
 					String timestickfinal = oid_index_barras[2];
-					TS.Put_ID_Timebegins(oid_index,timestickfinal);
+					TS.Put_ID_Timefinals(oid_index,timestickfinal);
+
+				}
+
+				if (oid_coluna.equals("5")) {
+					String oid_index_bruto = oidporpontos[9];
+					String[] oid_index_barras = oid_index_bruto.split(Pattern.quote("|"));
+					String oid_index = oid_index_barras[0];
+					System.out.println(oid_index);
+					String counter_value = oid_index_barras[2];
+					TS.Put_ID_counter(oid_index,counter_value);
 
 				}
 		}

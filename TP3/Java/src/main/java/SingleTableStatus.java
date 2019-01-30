@@ -7,6 +7,7 @@ public class SingleTableStatus {
     private Map<String,String> ID_TableStatus_userIds = new HashMap<String, String>();
     private Map<String,String> ID_TableStatus_TimeBegins = new HashMap<String, String>();
     private Map<String,String> ID_TableStatus_TimeFinals = new HashMap<String, String>();
+    private Map<String,String> ID_TableStatus_counter = new HashMap<String, String>();
 
     public int size_users;
     public int size_TimeBegins;
@@ -50,6 +51,16 @@ public class SingleTableStatus {
     public String Get_Timefinals_by_id (String Id){
         String Timefinals_new = ID_TableStatus_TimeBegins.get(Id);
         return Timefinals_new;
+    }
+
+
+    public void Put_ID_counter (String Id, String counter_new) {
+        ID_TableStatus_counter.put(Id, counter_new);
+    }
+
+    public String Get_counter_by_id (String Id){
+        String counter_new = ID_TableStatus_counter.get(Id);
+        return counter_new;
     }
 
     public void Put_sizeusers(int size_new){
