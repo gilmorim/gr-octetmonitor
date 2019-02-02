@@ -1,3 +1,5 @@
+package main.java;
+
 import org.snmp4j.PDU;
 
 public class SNMPResponseData {

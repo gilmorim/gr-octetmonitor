@@ -1,9 +1,10 @@
+package main.java;
+
 import org.snmp4j.*;
 import org.snmp4j.smi.*;
 
 import java.io.IOException;
 import java.util.*;
-
 
 /*
 *

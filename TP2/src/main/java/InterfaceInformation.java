@@ -1,3 +1,5 @@
+package main.java;
+
 public class InterfaceInformation {
     int index;
     String description;
