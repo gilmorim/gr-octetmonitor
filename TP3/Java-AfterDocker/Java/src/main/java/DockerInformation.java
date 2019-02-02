@@ -6,7 +6,6 @@ import com.spotify.docker.client.DockerClient;
 import com.spotify.docker.client.exceptions.DockerCertificateException;
 import com.spotify.docker.client.exceptions.DockerException;
 import com.spotify.docker.client.messages.*;
-
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -47,12 +46,14 @@ public class DockerInformation {
                         .driver("bridge")
                         .build()
         );
-        final ContainerCreation container = dockerClient.createContainer(ContainerConfig
-                .builder()
-                .image(imageId)
+        //criacao de containers
+        final ContainerConfig containerConfig = ContainerCOnfig.builder()
+                .hostConfig(hostConfig)
+                .image(imageId).exposedPorts(ports)
+                .build();
+        final ContainerCreation container = dockerClient.createContainer(containerConfig);
 
-                .exposedPorts("3306")
-                .build()
+
         );
         dockerClient.startContainer(container.id());
         dockerClient.connectToNetwork(container.id(), network.id());
