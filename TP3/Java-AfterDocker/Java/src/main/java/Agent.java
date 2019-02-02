@@ -7,6 +7,7 @@ import com.spotify.docker.client.messages.ContainerCreation;
 import jnr.ffi.annotations.In;
 import org.snmp4j.TransportMapping;
 import org.snmp4j.agent.*;
+import org.snmp4j.agent.mo.DefaultMOFactory;
 import org.snmp4j.agent.mo.MOAccessImpl;
 import org.snmp4j.agent.mo.MOScalar;
 import org.snmp4j.agent.mo.MOTableRow;
@@ -30,6 +31,7 @@ import java.util.List;
 import java.util.TreeMap;
 import java.util.regex.Pattern;
 
+import static org.snmp4j.agent.mo.MOAccessImpl.ACCESSIBLE_FOR_READ_WRITE;
 import static org.snmp4j.agent.mo.ext.AgentppSimulationMib.AgentppSimModeEnum.config;
 
 /**
@@ -196,15 +198,17 @@ public class Agent extends BaseAgent {
 		registerManagedObject(new MOScalar(new OID("1.3.6.1.3.2019.1.2.0"), MOAccessImpl.ACCESS_READ_WRITE, new Integer32(Integer.parseInt(imagep))));
 		registerManagedObject(new MOScalar(new OID("1.3.6.1.3.2019.1.3.0"), MOAccessImpl.ACCESS_READ_WRITE, new Integer32(Integer.parseInt(flagp))));
 		//Table of imagens
+		MOAccess Permissao = new MOAccessImpl(ACCESSIBLE_FOR_READ_WRITE);
 		SingleTableImage TI = SingleTableImage.getInstance();
 		int size = TI.Get_size();
 			for (int j=0; j <size; j++) {
+
 				//registerManagedObject(new MOScalar(new OID("1.3.6.1.3.2019.2.1.1."+oid+".0"), MOAccessImpl.ACCESS_READ_ONLY, new OctetString(String.valueOf(j))));
 				MOTableBuilder builder = new MOTableBuilder(new OID("1.3.6.1.3.2019.2.1."))
-						.addColumnType(SMIConstants.SYNTAX_INTEGER, MOAccessImpl.ACCESS_READ_WRITE);
+						.addColumnType(SMIConstants.SYNTAX_INTEGER, Permissao);
 				// Normally you would begin loop over you two domain objects her
 				//next row
-				builder.addColumnType(SMIConstants.SYNTAX_OCTET_STRING, MOAccessImpl.ACCESS_READ_WRITE);
+				builder.addColumnType(SMIConstants.SYNTAX_OCTET_STRING,Permissao);
 				for (int k = 0; k < size; k++) {
 					String id = TI.Get_ID_by_inteiroseq(k);
 					builder.addRowValue(new Integer32(k));
