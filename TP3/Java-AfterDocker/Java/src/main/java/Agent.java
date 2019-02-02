@@ -4,6 +4,7 @@ import com.spotify.docker.client.exceptions.DockerCertificateException;
 import com.spotify.docker.client.exceptions.DockerException;
 import com.spotify.docker.client.messages.ContainerConfig;
 import com.spotify.docker.client.messages.ContainerCreation;
+import jnr.ffi.annotations.In;
 import org.snmp4j.TransportMapping;
 import org.snmp4j.agent.*;
 import org.snmp4j.agent.mo.MOAccessImpl;
@@ -112,19 +113,39 @@ public class Agent extends BaseAgent {
 	protected void addViews(VacmMIB vacm) {
 		UniversalVariables UV = UniversalVariables.getInstance();
 		String com = UV.Get_CMS();
-		vacm.addGroup(SecurityModel.SECURITY_MODEL_SNMPv2c, new OctetString(
-						com), new OctetString(com),
-				StorageType.nonVolatile);
+		//security model + securityname, group name + storagetype
+		vacm.addGroup(SecurityModel.SECURITY_MODEL_ANY, new OctetString(com), new OctetString("com2sec"), StorageType.nonVolatile);
+		vacm.addGroup(SecurityModel.SECURITY_MODEL_SNMPv2c, new OctetString(com), new OctetString("com2sec"), StorageType.other);
+		vacm.addGroup(SecurityModel.SECURITY_MODEL_SNMPv2c, new OctetString(com), new OctetString("com2sec"), StorageType.volatile_);
+		vacm.addGroup(SecurityModel.SECURITY_MODEL_SNMPv2c, new OctetString(com), new OctetString("com2sec"), StorageType.nonVolatile);
+		vacm.addGroup(SecurityModel.SECURITY_MODEL_SNMPv2c, new OctetString(com), new OctetString("com2sec"), StorageType.permanent);
+		vacm.addGroup(SecurityModel.SECURITY_MODEL_SNMPv2c, new OctetString(com), new OctetString("com2sec"), StorageType.readOnly);
+		//group name + context prefix + security model + security level  + match + readview + read vview +write view + notify view + storage type
+		vacm.addAccess(new OctetString("com2sec"), new OctetString(com), SecurityModel.SECURITY_MODEL_ANY, SecurityLevel.NOAUTH_NOPRIV, MutableVACM.VACM_MATCH_EXACT, new OctetString(com), new OctetString(com), new OctetString(com), StorageType.nonVolatile);
+		// view name + subtree + mask + type + storagetype
+		vacm.addViewTreeFamily(new OctetString(com), new OID("1.3.6.1.3.2019"), new OctetString(com), VacmMIB.vacmViewIncluded, StorageType.nonVolatile);
+		vacm.addViewTreeFamily(new OctetString(com), new OID("1.3.6.1.3.2019.3"), new OctetString(com), VacmMIB.vacmViewIncluded, StorageType.nonVolatile);
+		vacm.addViewTreeFamily(new OctetString(com), new OID("1.3.6.1.3.2019.3.1."), new OctetString(com), VacmMIB.vacmViewIncluded, StorageType.nonVolatile);
+		vacm.addViewTreeFamily(new OctetString(com), new OID("1.3.6.1.3.2019.3.1.4"), new OctetString(com), VacmMIB.vacmViewIncluded, StorageType.nonVolatile);
+		vacm.addViewTreeFamily(new OctetString(com), new OID("1.3.6.1.3.2019.3.1.4.0"), new OctetString(com), VacmMIB.vacmViewIncluded, StorageType.nonVolatile);
+		vacm.addViewTreeFamily(new OctetString(com), new OID("1.3.6.1.3.2019.3.1.4.1"), new OctetString(com), VacmMIB.vacmViewIncluded, StorageType.nonVolatile);
+		vacm.addViewTreeFamily(new OctetString(com), new OID("1.3.6.1.3.2019.3.1.4.2"), new OctetString(com), VacmMIB.vacmViewIncluded, StorageType.nonVolatile);
 
-		vacm.addAccess(new OctetString(com), new OctetString(com),
-				SecurityModel.SECURITY_MODEL_ANY, SecurityLevel.NOAUTH_NOPRIV,
-				MutableVACM.VACM_MATCH_EXACT, new OctetString(com),
-				new OctetString(com), new OctetString(
-						com), StorageType.nonVolatile);
-
-		vacm.addViewTreeFamily(new OctetString(com), new OID("1"),
-				new OctetString(), VacmMIB.vacmViewIncluded,
-				StorageType.nonVolatile);
+	}
+	protected void addCommunities(SnmpCommunityMIB communityMIB) {
+		UniversalVariables UV = UniversalVariables.getInstance();
+		String com = UV.Get_CMS();
+		Variable[] com2sec = new Variable[]{
+				new OctetString(com), // community name
+				new OctetString(com), // security name
+				getAgent().getContextEngineID(), // local engine ID
+				new OctetString(com), // default context name
+				new OctetString(com), // transport tag
+				new Integer32(StorageType.nonVolatile), // storage type
+				new Integer32(RowStatus.active) // row status
+		};
+		MOTableRow row = communityMIB.getSnmpCommunityEntry().createRow(new OctetString(com).toSubIndex(true), com2sec);
+		communityMIB.getSnmpCommunityEntry().addRow(row);
 	}
 
 	/**
@@ -152,7 +173,7 @@ public class Agent extends BaseAgent {
 		init();
 		// This method reads some old config from a file and causes
 		// unexpected behavior.
-		// loadConfig(ImportModes.REPLACE_CREATE); 
+		// loadConfig(ImportModes.REPLACE_CREATE);
 		addShutdownHook();
 		UniversalVariables UV = UniversalVariables.getInstance();
 		String com = UV.Get_CMS();
@@ -171,9 +192,9 @@ public class Agent extends BaseAgent {
 		String indexp = SP.Get_Indexp();
 		String imagep = SP.Get_indImagep();
 		String flagp = SP.Get_flagp();
-		registerManagedObject(new MOScalar(new OID("1.3.6.1.3.2019.1.1.0"), MOAccessImpl.ACCESS_READ_WRITE, new OctetString(indexp)));
-		registerManagedObject(new MOScalar(new OID("1.3.6.1.3.2019.1.2.0"), MOAccessImpl.ACCESS_READ_WRITE, new OctetString(imagep)));
-		registerManagedObject(new MOScalar(new OID("1.3.6.1.3.2019.1.3.0"), MOAccessImpl.ACCESS_READ_WRITE, new OctetString(flagp)));
+		registerManagedObject(new MOScalar(new OID("1.3.6.1.3.2019.1.1.0"), MOAccessImpl.ACCESS_READ_WRITE, new Integer32(Integer.parseInt(indexp))));
+		registerManagedObject(new MOScalar(new OID("1.3.6.1.3.2019.1.2.0"), MOAccessImpl.ACCESS_READ_WRITE, new Integer32(Integer.parseInt(imagep))));
+		registerManagedObject(new MOScalar(new OID("1.3.6.1.3.2019.1.3.0"), MOAccessImpl.ACCESS_READ_WRITE, new Integer32(Integer.parseInt(flagp))));
 		//Table of imagens
 		SingleTableImage TI = SingleTableImage.getInstance();
 		int size = TI.Get_size();
@@ -182,8 +203,6 @@ public class Agent extends BaseAgent {
 				MOTableBuilder builder = new MOTableBuilder(new OID("1.3.6.1.3.2019.2.1."))
 						.addColumnType(SMIConstants.SYNTAX_INTEGER, MOAccessImpl.ACCESS_READ_WRITE);
 				// Normally you would begin loop over you two domain objects her
-
-
 				//next row
 				builder.addColumnType(SMIConstants.SYNTAX_OCTET_STRING, MOAccessImpl.ACCESS_READ_WRITE);
 				for (int k = 0; k < size; k++) {
@@ -243,8 +262,7 @@ public class Agent extends BaseAgent {
 			TimeTicks timefinal = new TimeTicks(Long.parseLong(timesticksfinal));
 			int counter = S.Get_counter_by_id(String.valueOf(k));
 			//int counter_int = Integer.valueOf(counter);
-			registerManagedObject(new MOScalar(new OID("1.3.6.1.3.2019.4.1.0"), MOAccessImpl.ACCESS_READ_WRITE, new OctetString(indexs)));
-			registerManagedObject(new MOScalar(new OID("1.3.6.1.3.2019.4.2.0"), MOAccessImpl.ACCESS_READ_WRITE, new OctetString(userids)));
+			registerManagedObject(new MOScalar(new OID("1.3.6.1.3.2019.4.1.0"), MOAccessImpl.ACCESS_READ_WRITE, new Integer32(Integer.parseInt(indexs))));
 			registerManagedObject(new MOScalar(new OID("1.3.6.1.3.2019.4.3.0"), MOAccessImpl.ACCESS_READ_WRITE, new TimeTicks(timeinit)));
 			registerManagedObject(new MOScalar(new OID("1.3.6.1.3.2019.4.4.0"), MOAccessImpl.ACCESS_READ_WRITE, new TimeTicks(timefinal)));
 			registerManagedObject(new MOScalar(new OID("1.3.6.1.3.2019.4.5.0"), MOAccessImpl.ACCESS_READ_WRITE, new Counter64(counter)));
@@ -256,22 +274,6 @@ public class Agent extends BaseAgent {
 	/**
 	 * Adds community to security name mappings needed for SNMPv1 and SNMPv2c.
 	 */
-	protected void addCommunities(SnmpCommunityMIB communityMIB) {
-		UniversalVariables UV = UniversalVariables.getInstance();
-		String com = UV.Get_CMS();
-		Variable[] com2sec = new Variable[]{
-
-				new OctetString(com), // community name
-				new OctetString("cpublic"), // security name
-				getAgent().getContextEngineID(), // local engine ID
-				new OctetString("public"), // default context name
-				new OctetString(), // transport tag
-				new Integer32(StorageType.nonVolatile), // storage type
-				new Integer32(RowStatus.active) // row status
-		};
-		MOTableRow row = communityMIB.getSnmpCommunityEntry().createRow(new OctetString("public2public").toSubIndex(true), com2sec);
-		communityMIB.getSnmpCommunityEntry().addRow(row);
-	}
 
 	public static void main(String[] args) throws IOException, InterruptedException, DockerCertificateException, DockerException, URISyntaxException {
 		//parametros

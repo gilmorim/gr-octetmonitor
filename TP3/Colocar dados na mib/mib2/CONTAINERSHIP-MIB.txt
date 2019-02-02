@@ -8,21 +8,23 @@ IMPORTS
 
 
 containerSHIPMIB MODULE-IDENTITY
-LAST-UPDATED "201901290000Z"
+LAST-UPDATED "201803290000Z"
 ORGANIZATION "Mieti - Gestao de Redes - Grupo 4"
 CONTACT-INFO    
 "postal:   Azurem  email:    mieti@eng.uminho.pt"
 DESCRIPTION
 "Example MIB objects for agent module example implementations"
-REVISION     "201901300000Z"
+REVISION     "201803290000Z"
 DESCRIPTION
 	"Corrected notification example definitions"
-REVISION "201901300000Z"
+REVISION "201801280000Z"
 DESCRIPTION
 	"First draft"
 ::={experimental 2019}
 
 containerShipParam OBJECT IDENTIFIER ::= { containerSHIPMIB 1 }
+containerShipImageTable OBJECT IDENTIFIER ::= { containerSHIPMIB 2 }
+
 containershipStatus OBJECT IDENTIFIER ::= { containerSHIPMIB 4 }
 --
 -- 1 containerShipParam - não table 
@@ -75,7 +77,7 @@ containerShipImageEntry OBJECT-TYPE
 
 ContainerShipImageTableEntry ::= SEQUENCE {
 	indexi	Integer32,
-	imagei	DisplayString
+	imagei	OCTET STRING
 }
 
 indexi OBJECT-TYPE
@@ -87,7 +89,7 @@ indexi OBJECT-TYPE
     ::= { containerShipImageEntry 1 }
 
 imagei OBJECT-TYPE
-    SYNTAX      DisplayString
+    SYNTAX      OCTET STRING
     MAX-ACCESS  read-write
     STATUS      current
     DESCRIPTION
@@ -100,7 +102,7 @@ imagei OBJECT-TYPE
 --
 containershipContainerTable OBJECT-TYPE
     SYNTAX SEQUENCE OF ContainerShipContainerTableEntry
-    MAX-ACCESS  read-write
+    MAX-ACCESS  not-accessible
     STATUS      current
     DESCRIPTION
 	"Informacao de containers criados"
@@ -108,7 +110,7 @@ containershipContainerTable OBJECT-TYPE
 
 containerShipContainerEntry OBJECT-TYPE
     SYNTAX      ContainerShipContainerTableEntry
-    MAX-ACCESS  read-write
+    MAX-ACCESS  not-accessible
     STATUS      current
     DESCRIPTION
 	"Uma linha da tabela contem varias Informacoes estisticas sobre a utilizacao: index, name, image, status e processor"
@@ -178,21 +180,13 @@ indexs OBJECT-TYPE
 	"indice que identifica a Informacao do container  "
     ::= { containershipStatus 1 }
 
-userIds OBJECT-TYPE
-    SYNTAX      Integer32 (1..32)
-    MAX-ACCESS  read-write
-    STATUS      current
-    DESCRIPTION
-	"id do utilizador que criou o container"
-    ::= { containershipStatus 2 }
-
 timeBegins OBJECT-TYPE
     SYNTAX      TimeTicks
     MAX-ACCESS  read-write
     STATUS      current
     DESCRIPTION
 	"etiqueta que indica o inicio da criacao do container"
-    ::= { containershipStatus 3 }
+    ::= { containershipStatus 2 }
 
 timeFinals OBJECT-TYPE
     SYNTAX      TimeTicks
@@ -200,7 +194,7 @@ timeFinals OBJECT-TYPE
     STATUS      current
     DESCRIPTION
 	"etiqueta que indica o final do uso do container"
-    ::= { containershipStatus 4 }  
+    ::= { containershipStatus 3 }  
 
 counterStatuss OBJECT-TYPE
     SYNTAX Counter64
@@ -208,7 +202,7 @@ counterStatuss OBJECT-TYPE
     STATUS current
     DESCRIPTION
     "contador numero de acessos a tabela"
-     ::= { containershipStatus 5 }  
+     ::= { containershipStatus 4 }  
      
      
 END
