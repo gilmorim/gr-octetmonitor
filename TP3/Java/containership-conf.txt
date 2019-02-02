@@ -1,0 +1,2 @@
+udp_port 1024
+community_string CONTAINERSHIP-MIB
