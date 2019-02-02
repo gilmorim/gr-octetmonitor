@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>tp3</groupId>
+    <artifactId>tp3</artifactId>
+    <version>1.0-SNAPSHOT</version>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>7</source>
+                    <target>7</target>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>${maven-surefire-plugin.version}</version>
+                <configuration>
+                    <rerunFailingTestsCount>3</rerunFailingTestsCount>
+                    <excludedGroups>com.github.dockerjava.junit.category.Integration</excludedGroups>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-failsafe-plugin</artifactId>
+                <version>${maven-failsafe-plugin.version}</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>integration-test</goal>
+                            <goal>verify</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <rerunFailingTestsCount>3</rerunFailingTestsCount>
+                    <!--<useUnlimitedThreads>true</useUnlimitedThreads>-->
+                    <perCoreThreadCount>true</perCoreThreadCount>
+                    <threadCount>1</threadCount>
+                    <parallel>classes</parallel>
+                    <groups>com.github.dockerjava.junit.category.Integration</groups>
+                    <excludedGroups>com.github.dockerjava.junit.category.AuthIntegration,com.github.dockerjava.junit.category.SwarmModeIntegration</excludedGroups>
+                </configuration>
+            </plugin>
+        </plugins>
+
+    </build>
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <jdk.debug>true</jdk.debug>
+        <jdk.optimize>false</jdk.optimize>
+        <jdk.source>1.7</jdk.source>
+        <jdk.target>1.7</jdk.target>
+
+        <jersey.version>2.27</jersey.version>
+        <jackson-jaxrs.version>2.9.7</jackson-jaxrs.version>
+        <httpclient.version>4.5.6</httpclient.version><!-- 4.5.1-4.5.2 broken -->
+        <commons-compress.version>1.18</commons-compress.version>
+        <commons-codec.version>1.11</commons-codec.version>
+        <commons-io.version>2.6</commons-io.version>
+        <commons-lang.version>2.6</commons-lang.version>
+        <slf4j-api.version>1.7.25</slf4j-api.version>
+
+        <bouncycastle.version>1.60</bouncycastle.version>
+        <junixsocket.version>2.0.4</junixsocket.version>
+        <guava.version>19.0</guava.version>
+
+        <!-- test dependencies -->
+        <logback.version>1.2.3</logback.version>
+        <netty.version>4.1.31.Final</netty.version>
+        <hamcrest.library.version>1.3</hamcrest.library.version>
+        <hamcrest.jpa-matchers>1.8</hamcrest.jpa-matchers>
+        <lambdaj.version>2.3.3</lambdaj.version>
+        <mockito.version>1.10.19</mockito.version>
+
+
+        <maven-jar-plugin.version>3.0.2</maven-jar-plugin.version>
+        <maven-compiler-plugin.version>3.5.1</maven-compiler-plugin.version>
+        <maven-release-plugin.version>2.5.3</maven-release-plugin.version>
+        <maven-surefire-plugin.version>2.20</maven-surefire-plugin.version>
+        <maven-failsafe-plugin.version>2.20</maven-failsafe-plugin.version>
+        <maven-antrun-plugin.version>1.8</maven-antrun-plugin.version>
+        <maven-bundlor-plugin.version>1.1.2.RELEASE</maven-bundlor-plugin.version>
+        <maven-build-helper-plugin.version>3.0.0</maven-build-helper-plugin.version>
+    </properties>
+    <dependencies>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.8.1</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.snmp4j</groupId>
+            <artifactId>snmp4j-agent</artifactId>
+            <version>1.3.1</version>
+        </dependency>
+        <dependency>
+            <groupId>com.jayway.awaitility</groupId>
+            <artifactId>awaitility</artifactId>
+            <version>1.2.1</version>
+            <scope>test</scope>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/com.spotify/docker-client -->
+        <dependency>
+            <groupId>com.spotify</groupId>
+            <artifactId>docker-client</artifactId>
+            <version>8.15.0</version>
+        </dependency>
+        <!-- docker-client -->
+
+        <dependency>
+            <groupId>com.github.docker-java</groupId>
+            <artifactId>docker-java</artifactId>
+            <version>3.1.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.github.docker-java</groupId>
+            <artifactId>docker-java</artifactId>
+            <!-- use latest version https://github.com/docker-java/docker-java/releases -->
+            <version>3.1.1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>${slf4j-api.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>jcl-over-slf4j</artifactId>
+            <version>${slf4j-api.version}</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/junit/junit -->
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.12</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+</project>
