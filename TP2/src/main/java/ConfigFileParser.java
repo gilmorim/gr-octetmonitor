@@ -1,6 +1,9 @@
+package main.java;
+
 import java.io.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
 
 public class ConfigFileParser {
     String ipAddress;

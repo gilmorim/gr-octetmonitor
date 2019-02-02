@@ -1,41 +1,21 @@
-import org.snmp4j.smi.OID;
+package main.java;
 
 public class InterfaceInformation {
     int index;
     String description;
     String macAddress;
-    int incomingOctets;
-    int outgoingOctets;
+    int incomingOctets = 0;
+    int outgoingOctets = 0;
     String status;
     int interval;
+    int previousDifference = 0;
     String incomingOctetsOid;
     String outgoingOctetsOid;
 
     public InterfaceInformation(){}
 
-
-    public int getIndex() {
-        return index;
-    }
-
     public String getDescription() {
         return description;
-    }
-
-    public String getMacAddress() {
-        return macAddress;
-    }
-
-    public int getIncomingOctets() {
-        return incomingOctets;
-    }
-
-    public int getOutgoingOctets() {
-        return outgoingOctets;
-    }
-
-    public String isStatus() {
-        return status;
     }
 
     public void setIndex(int index) {
@@ -68,11 +48,12 @@ public class InterfaceInformation {
 
     public int getInterval() { return interval; }
 
-    public void setInterval(int delay) { this.interval = delay; }
-
-    public String getStatus() {
-        return status;
+    public void setInterval(int interval) {
+        this.interval = interval;
     }
+
+
+    public void setPreviousDifference(int previousDifference){this.previousDifference = previousDifference;}
 
     public String getIncomingOctetsOid() {
         return incomingOctetsOid;
@@ -92,15 +73,13 @@ public class InterfaceInformation {
 
     @Override
     public String toString() {
-        return "Interface data: " +
-                "index=" + index +
-                ", description='" + description + '\'' +
-                ", macAddress='" + macAddress + '\'' +
-                ", incomingOctets=" + incomingOctets +
-                ", outgoingOctets=" + outgoingOctets +
-                ", status='" + status + '\'' +
-                ", incoming octets OID ='" + incomingOctetsOid + '\'' +
-                ", outgoing octets OID ='" + outgoingOctetsOid + '\'' +
-                ", difference='" + getDifference() + '\'';
+        return  "description = " + description + " \n" +
+                "macAddress = " + macAddress + " \n" +
+                "incomingOctets = " + incomingOctets + " \n" +
+                "outgoingOctets = " + outgoingOctets + " \n" +
+                "status = " + status + " \n" +
+                "interval = " + interval/1000 + "s \n" +
+                "difference = " + getDifference() + "\n" +
+                "change in rate = " + (getDifference() - previousDifference) + "\n\n";
     }
 }
