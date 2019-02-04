@@ -606,21 +606,40 @@ public class Agent extends BaseAgent implements MOChangeListener {
 		String objecto = oidporpontos[6];
 		String instancia = oidporpontos[7];
 		String value = oidporpontos[8];
+		SingleParam SP = SingleParam.getInstance();
 		SingleTableImage TI = SingleTableImage.getInstance();
 		UniversalVariables UV = UniversalVariables.getInstance();
 		if (objecto.equals("1")){
 				if (instancia.equals("1")){
 				String imagem = TI.Get_Image_by_id(value);
-				if (value.equals("null")){
+				if (imagem.equals("null")){
 					System.out.println("Não existem imagens com esse id ");
 				}
 				else {
+					SP.Put_Indexp(value);
 					MOScalar param2 = UV.Get_escalar_param_2();
 					param2.setValue(new OctetString(imagem));
 
 				}
+
+				// set flag
+				if (instancia.equals("3")){
+					String flag = SP.Get_flagp();
+
+					if (flag.equals("null")){
+						System.out.println("Não existem flags com esse id ");
+					}
+					else {
+						// iniciar container...
+						SingleStatus statistics = SingleStatus.getInstance();
+						String indexp = SP.Get_Indexp();
+						StringBuilder timestamp = new StringBuilder();
+						timestamp.append(System.currentTimeMillis());
+						statistics.Put_ID_Timebegins(indexp, timestamp.toString());
+					}
 			}
 		}
 	}
+}
 }
 
