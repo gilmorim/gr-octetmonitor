@@ -21,17 +21,49 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/Agent.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="210">
-              <caret line="218" selection-start-line="218" selection-end-line="218" />
+            <state relative-caret-position="2748">
+              <caret line="619" lean-forward="true" selection-start-line="619" selection-end-line="619" />
               <folding>
                 <element signature="imports" expanded="true" />
-                <element signature="method#unregisterManagedObjects#0;class#Agent#0" />
-                <element signature="docComment;method#addViews#0;class#Agent#0" />
-                <element signature="e#12964#12972#0" expanded="true" />
-                <element signature="e#14959#15222#0" expanded="true" />
-                <element signature="e#15221#15222#0" expanded="true" />
-                <element signature="e#15028#15036#0" expanded="true" />
+                <element signature="e#3288#3289#0" expanded="true" />
+                <element signature="e#3345#3346#0" expanded="true" />
+                <element signature="e#13105#13113#0" expanded="true" />
+                <element signature="e#14470#14733#0" expanded="true" />
+                <element signature="e#14732#14733#0" expanded="true" />
+                <element signature="e#15404#15412#0" expanded="true" />
+                <element signature="e#17007#17015#0" expanded="true" />
+                <element signature="e#19264#19272#0" expanded="true" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/main/java/UniversalVariables.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="422">
+              <caret line="45" column="4" selection-start-line="45" selection-start-column="4" selection-end-line="45" selection-end-column="4" />
+              <folding>
+                <element signature="e#600#601#0" expanded="true" />
+                <element signature="e#629#630#0" expanded="true" />
+                <element signature="e#795#796#0" expanded="true" />
+                <element signature="e#814#815#0" expanded="true" />
+                <element signature="e#869#870#0" expanded="true" />
+                <element signature="e#894#895#0" expanded="true" />
+                <element signature="e#990#991#0" expanded="true" />
+                <element signature="e#1023#1024#0" expanded="true" />
+                <element signature="e#1072#1073#0" expanded="true" />
+                <element signature="e#1098#1099#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/objects/CustomManagedObject.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="60">
+              <caret line="7" column="13" selection-start-line="7" selection-start-column="13" selection-end-line="7" selection-end-column="13" />
             </state>
           </provider>
         </entry>
@@ -39,8 +71,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/DockerInformation.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="90">
-              <caret line="35" column="7" lean-forward="true" selection-start-line="35" selection-start-column="7" selection-end-line="41" selection-end-column="9" />
+            <state relative-caret-position="165">
+              <caret line="65" column="44" selection-start-line="65" selection-start-column="42" selection-end-line="65" selection-end-column="44" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -48,11 +80,11 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/MOTableBuilder.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="133">
-              <caret line="65" column="8" selection-start-line="65" selection-start-column="8" selection-end-line="65" selection-end-column="8" />
+            <state relative-caret-position="-133">
+              <caret line="65" selection-start-line="65" selection-end-line="65" />
             </state>
           </provider>
         </entry>
@@ -81,7 +113,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/ManagedObjectFactory.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-302">
+            <state relative-caret-position="225">
               <caret line="15" column="70" selection-start-line="15" selection-start-column="70" selection-end-line="15" selection-end-column="70" />
               <folding>
                 <element signature="imports" expanded="true" />
@@ -102,7 +134,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/SingleCointainerTable.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="420">
+            <state relative-caret-position="212">
               <caret line="32" column="43" selection-start-line="32" selection-start-column="43" selection-end-line="32" selection-end-column="43" />
               <folding>
                 <element signature="imports" expanded="true" />
@@ -140,7 +172,6 @@
         <option value="$PROJECT_DIR$/src/main/java/MOScalarFactory.java" />
         <option value="$PROJECT_DIR$/src/main/java/client.java" />
         <option value="$PROJECT_DIR$/src/main/java/SNMPFunctions.java" />
-        <option value="$PROJECT_DIR$/src/main/java/UniversalVariables.java" />
         <option value="$PROJECT_DIR$/src/main/java/objects/DateString.java" />
         <option value="$PROJECT_DIR$/src/main/java/ManagedObjectFactory.java" />
         <option value="$PROJECT_DIR$/src/main/java/SingleParam.java" />
@@ -155,8 +186,9 @@
         <option value="$PROJECT_DIR$/pom.xml" />
         <option value="$PROJECT_DIR$/src/main/java/DefaultMOTable.java" />
         <option value="$PROJECT_DIR$/src/main/java/DockerInformation.java" />
-        <option value="$PROJECT_DIR$/src/main/java/Agent.java" />
         <option value="$PROJECT_DIR$/src/main/java/MOTableBuilder.java" />
+        <option value="$PROJECT_DIR$/src/main/java/Agent.java" />
+        <option value="$PROJECT_DIR$/src/main/java/UniversalVariables.java" />
       </list>
     </option>
   </component>
@@ -204,6 +236,14 @@
               <item name="src" type="462c0819:PsiDirectoryNode" />
               <item name="main" type="462c0819:PsiDirectoryNode" />
               <item name="java" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="tp3" type="b2602c69:ProjectViewProjectNode" />
+              <item name="Java" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="462c0819:PsiDirectoryNode" />
+              <item name="java" type="462c0819:PsiDirectoryNode" />
+              <item name="objects" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
@@ -275,7 +315,7 @@
     <frame x="0" y="25" width="1920" height="986" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.4974093" visible="true" weight="0.18356457" />
+      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.4974093" visible="true" weight="0.18356457" />
       <window_info id="Structure" order="1" sideWeight="0.50259066" side_tool="true" weight="0.18356457" />
       <window_info id="Image Layers" order="2" />
       <window_info id="Designer" order="3" />
@@ -284,7 +324,7 @@
       <window_info id="Favorites" order="6" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.32905483" />
-      <window_info anchor="bottom" id="Run" order="2" visible="true" weight="0.3243874" />
+      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.3243874" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.252042" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
@@ -371,25 +411,25 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/Agent.java</url>
-          <line>292</line>
+          <line>296</line>
           <properties />
           <option name="timeStamp" value="290" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/Agent.java</url>
-          <line>293</line>
+          <line>297</line>
           <properties />
           <option name="timeStamp" value="291" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/Agent.java</url>
-          <line>294</line>
+          <line>298</line>
           <properties />
           <option name="timeStamp" value="292" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/Agent.java</url>
-          <line>359</line>
+          <line>363</line>
           <properties />
           <option name="timeStamp" value="300" />
         </line-breakpoint>
@@ -410,17 +450,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="60">
           <caret line="7" column="13" selection-start-line="7" selection-start-column="13" selection-end-line="7" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/UniversalVariables.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="375">
-          <caret line="25" column="7" selection-start-line="25" selection-start-column="7" selection-end-line="25" selection-end-column="7" />
-          <folding>
-            <element signature="e#600#601#0" expanded="true" />
-            <element signature="e#629#630#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -484,7 +513,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/SingleCointainerTable.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="420">
+        <state relative-caret-position="212">
           <caret line="32" column="43" selection-start-line="32" selection-start-column="43" selection-end-line="32" selection-end-column="43" />
           <folding>
             <element signature="imports" expanded="true" />
@@ -499,9 +528,7 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/DefaultMOTable.java">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/DefaultMOTable.java" />
     <entry file="file://$PROJECT_DIR$/src/main/java/MOScalarFactory.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="150">
@@ -511,7 +538,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/ManagedObjectFactory.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-302">
+        <state relative-caret-position="225">
           <caret line="15" column="70" selection-start-line="15" selection-start-column="70" selection-end-line="15" selection-end-column="70" />
           <folding>
             <element signature="imports" expanded="true" />
@@ -535,34 +562,55 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/DockerInformation.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="90">
-          <caret line="35" column="7" lean-forward="true" selection-start-line="35" selection-start-column="7" selection-end-line="41" selection-end-column="9" />
+        <state relative-caret-position="165">
+          <caret line="65" column="44" selection-start-line="65" selection-start-column="42" selection-end-line="65" selection-end-column="44" />
           <folding>
             <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/Agent.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="210">
-          <caret line="218" selection-start-line="218" selection-end-line="218" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="method#unregisterManagedObjects#0;class#Agent#0" />
-            <element signature="docComment;method#addViews#0;class#Agent#0" />
-            <element signature="e#12964#12972#0" expanded="true" />
-            <element signature="e#14959#15222#0" expanded="true" />
-            <element signature="e#15221#15222#0" expanded="true" />
-            <element signature="e#15028#15036#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/MOTableBuilder.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="133">
-          <caret line="65" column="8" selection-start-line="65" selection-start-column="8" selection-end-line="65" selection-end-column="8" />
+        <state relative-caret-position="-133">
+          <caret line="65" selection-start-line="65" selection-end-line="65" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/Agent.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2748">
+          <caret line="619" lean-forward="true" selection-start-line="619" selection-end-line="619" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#3288#3289#0" expanded="true" />
+            <element signature="e#3345#3346#0" expanded="true" />
+            <element signature="e#13105#13113#0" expanded="true" />
+            <element signature="e#14470#14733#0" expanded="true" />
+            <element signature="e#14732#14733#0" expanded="true" />
+            <element signature="e#15404#15412#0" expanded="true" />
+            <element signature="e#17007#17015#0" expanded="true" />
+            <element signature="e#19264#19272#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/UniversalVariables.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="422">
+          <caret line="45" column="4" selection-start-line="45" selection-start-column="4" selection-end-line="45" selection-end-column="4" />
+          <folding>
+            <element signature="e#600#601#0" expanded="true" />
+            <element signature="e#629#630#0" expanded="true" />
+            <element signature="e#795#796#0" expanded="true" />
+            <element signature="e#814#815#0" expanded="true" />
+            <element signature="e#869#870#0" expanded="true" />
+            <element signature="e#894#895#0" expanded="true" />
+            <element signature="e#990#991#0" expanded="true" />
+            <element signature="e#1023#1024#0" expanded="true" />
+            <element signature="e#1072#1073#0" expanded="true" />
+            <element signature="e#1098#1099#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>

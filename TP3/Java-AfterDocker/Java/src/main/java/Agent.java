@@ -196,19 +196,23 @@ public class Agent extends BaseAgent implements MOChangeListener {
 	protected void registerManagedObjects( ) {
 
 		getSnmpv2MIB().unregisterMOs(server, getContext(getSnmpv2MIB()));
+		UniversalVariables UV = UniversalVariables.getInstance();
 		SingleParam SP = SingleParam.getInstance();
 		String indexp = SP.Get_Indexp();
 		String imagep = SP.Get_indImagep();
 		String flagp = SP.Get_flagp();
 		MOScalar ms = new MOScalar(new OID("1.3.6.1.3.2019.1.1.0"), MOAccessImpl.ACCESS_READ_WRITE, new Integer32(Integer.parseInt(indexp)));
 		MOScalar mc = new MOScalar(new OID("1.3.6.1.3.2019.1.2.0"), MOAccessImpl.ACCESS_READ_WRITE, new Integer32(Integer.parseInt(imagep)));
+		MOScalar mv = new MOScalar(new OID("1.3.6.1.3.2019.1.3.0"), MOAccessImpl.ACCESS_READ_WRITE, new Integer32(Integer.parseInt(flagp)));
 		registerManagedObject(ms);
 		registerManagedObject(mc);
-		registerManagedObject(new MOScalar(new OID("1.3.6.1.3.2019.1.3.0"), MOAccessImpl.ACCESS_READ_WRITE, new Integer32(Integer.parseInt(flagp))));
+		registerManagedObject(mv);
 		ms.addMOChangeListener(this);
 		mc.addMOChangeListener(this);
+		mv.addMOChangeListener(this);
+		UV.Put_escalar_param_1(ms);
+		UV.Put_escalar_param_2(mc);
 		//Table of imagens
-
 		MOAccess Permissao = new MOAccessImpl(ACCESSIBLE_FOR_READ_WRITE);
 		SingleTableImage TI = SingleTableImage.getInstance();
 		int size = TI.Get_size();
@@ -596,11 +600,27 @@ public class Agent extends BaseAgent implements MOChangeListener {
 		Variable mc = moChangeEvent.getOldValue();
 		System.out.println(smi);
 		System.out.println(oc);
-
 		String OID = oc.toString();
 		String[] oidporpontos = OID.split(Pattern.quote("."));
 		System.out.println(Arrays.toString(oidporpontos));
+		String objecto = oidporpontos[6];
+		String instancia = oidporpontos[7];
+		String value = oidporpontos[8];
+		SingleTableImage TI = SingleTableImage.getInstance();
+		UniversalVariables UV = UniversalVariables.getInstance();
+		if (objecto.equals("1")){
+			if (instancia.equals("1")){
+				String imagem = TI.Get_Image_by_id(value);
+				if (value.equals("null")){
+					System.out.println("Não existem imagens com esse id ");
+				}
+				else {
+					MOScalar param2 = UV.Get_escalar_param_2();
+					param2.setValue(new OctetString(imagem));
 
+				}
+			}
+		}
 	}
 }
 
