@@ -24,11 +24,27 @@ public class VariableTimer extends TimerTask {
         this.target = target;
     }
     public void schedule(){
-        interfaceInformation.setInterval((int)Math.round(Math.random()*15000)+5000);
-        System.out.println(interfaceInformation.getInterval()/1000 + "s");
+        //interfaceInformation.setInterval((int)Math.round(Math.random()*15000)+5000);
+        adjustInterval();
+        System.out.println("difference: " + interfaceInformation.getDifference() + "\nprevious: " + interfaceInformation.getPreviousDifference());
+        System.out.println("current polling interval: " + interfaceInformation.getInterval()/1000 + "s\n");
         timer.schedule(new VariableTimer(timer, interfaceInformation, snmpFunctions, target), interfaceInformation.getInterval());
     }
+
+    public void adjustInterval(){
+        int currentDifference = Math.abs(interfaceInformation.getDifference());
+        int rateChange = Math.abs(currentDifference - Math.abs(interfaceInformation.getPreviousDifference()));
+        if(rateChange < 300){
+            interfaceInformation.increaseInterval(1000);
+            System.out.println("small rate change of " + rateChange + ". Increasing poll interval by 1s");
+        } else {
+            interfaceInformation.decreaseInterval(5000);
+            System.out.println("big rate change of " + rateChange + ". Decreasing poll interval by 2s");
+        }
+    }
+
     public void run(){
+        interfaceInformation.setPreviousDifference(interfaceInformation.getDifference());
         try {
             SNMPResponseData incomingOctetsResponse = snmpFunctions.getNext(interfaceInformation.getIncomingOctetsOid(), target);
             interfaceInformation.setIncomingOctets(Integer.parseInt(incomingOctetsResponse.getResponse()));
@@ -41,7 +57,6 @@ public class VariableTimer extends TimerTask {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        interfaceInformation.setPreviousDifference(interfaceInformation.getDifference());
         System.out.println("interface " + interfaceInformation.getDescription() + ": " + interfaceInformation.getDifference());
         schedule();
     }
