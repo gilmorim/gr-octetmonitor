@@ -1,3 +1,4 @@
+import org.apache.commons.lang.mutable.Mutable;
 import org.snmp4j.agent.MOAccess;
 import org.snmp4j.agent.mo.*;
 import org.snmp4j.smi.OID;
@@ -60,7 +61,11 @@ public class MOTableBuilder {
 	 */
 	public MOTableBuilder addColumnType(int syntax, MOAccess access) {
 		colTypeCnt++;
-		columns.add(new MOColumn(colTypeCnt, syntax, access));
+
+		MOColumn Mc  =new MOColumn(colTypeCnt, syntax, access);
+		Mc.setAccess(MOAccessImpl.ACCESS_READ_WRITE);
+		columns.add(Mc);
+
 		return this;
 	}
 
@@ -92,4 +97,6 @@ public class MOTableBuilder {
 		ifTable.setVolatile(true);
 		return ifTable;
 	}
+
+
 }

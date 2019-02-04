@@ -1,4 +1,14 @@
+sudo nano /etc/snmp/snmpd.conf
+sudo service snmpd restart
 
+
+snmptable -v2c -Cw 3 -c CONTAINERSHIP-MIB -m "/usr/share/snmp/mibs/CONTAINERSHIP-MIB.txt" 127.0.0.1:1024 experimental.2019.3.1
+snmpset -v 2c -c CONTAINERSHIP-MIB 127.0.0.1:1024 experimental.2019.2.1.2.0 s "hello world"
+snmpwalk -v2c -c CONTAINERSHIP-MIB -m "/usr/share/snmp/mibs/CONTAINERSHIP-MIB.txt" 127.0.0.1:1024 1.3.6.1.3.2019
+
+/usr/share/snmp
+
+ snmpwalk -v2c -c CONTAINERSHIP-MIB 127.0.0.1:1024 1.3.6.1.3.2019
 
 // testar a mib 
 smilint -s -m -l6 containership-mib.txt

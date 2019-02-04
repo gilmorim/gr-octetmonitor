@@ -1,24 +1,42 @@
-import org.snmp4j.TransportMapping;
+import com.spotify.docker.client.DefaultDockerClient;
+import com.spotify.docker.client.DockerClient;
+import com.spotify.docker.client.exceptions.DockerCertificateException;
+import com.spotify.docker.client.exceptions.DockerException;
+import com.spotify.docker.client.messages.ContainerConfig;
+import com.spotify.docker.client.messages.ContainerCreation;
+import jnr.ffi.annotations.In;
+import org.snmp4j.*;
 import org.snmp4j.agent.*;
-import org.snmp4j.agent.mo.MOAccessImpl;
-import org.snmp4j.agent.mo.MOScalar;
-import org.snmp4j.agent.mo.MOTableRow;
+import org.snmp4j.agent.example.SampleAgent;
+import org.snmp4j.agent.mo.*;
 import org.snmp4j.agent.mo.snmp.*;
 import org.snmp4j.agent.security.MutableVACM;
+import org.snmp4j.event.ResponseEvent;
+import org.snmp4j.event.ResponseListener;
 import org.snmp4j.log.Log4jLogFactory;
 import org.snmp4j.log.LogFactory;
+import org.snmp4j.mp.MPv1;
+import org.snmp4j.mp.MPv2c;
 import org.snmp4j.mp.MPv3;
-import org.snmp4j.security.SecurityLevel;
-import org.snmp4j.security.SecurityModel;
-import org.snmp4j.security.USM;
+import org.snmp4j.mp.SnmpConstants;
+import org.snmp4j.security.*;
 import org.snmp4j.smi.*;
+import org.snmp4j.transport.AbstractTransportMapping;
+import org.snmp4j.transport.DefaultTcpTransportMapping;
+import org.snmp4j.transport.DefaultUdpTransportMapping;
 import org.snmp4j.transport.TransportMappings;
-
+import org.snmp4j.util.MultiThreadedMessageDispatcher;
+import java.awt.*;
 import java.io.*;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.TreeMap;
 import java.util.regex.Pattern;
+
+import static org.snmp4j.agent.mo.MOAccessImpl.ACCESSIBLE_FOR_READ_WRITE;
+import static org.snmp4j.agent.mo.ext.AgentppSimulationMib.AgentppSimModeEnum.config;
 
 /**
  * This Agent contains mimimal functionality for running a version 2c snmp
@@ -34,8 +52,9 @@ public class Agent extends BaseAgent {
 	static {
 		LogFactory.setLogFactory(new Log4jLogFactory());
 	}
-
+	private Snmp snmp;
 	private String address;
+	private UserTarget target;
 
 	public Agent(String address) throws IOException {
 
@@ -99,20 +118,41 @@ public class Agent extends BaseAgent {
 	 */
 	@Override
 	protected void addViews(VacmMIB vacm) {
+		UniversalVariables UV = UniversalVariables.getInstance();
+		String com = UV.Get_CMS();
+		//security model + securityname, group name + storagetype
+		vacm.addGroup(SecurityModel.SECURITY_MODEL_ANY, new OctetString(com), new OctetString("com2sec"), StorageType.nonVolatile);
+		vacm.addGroup(SecurityModel.SECURITY_MODEL_SNMPv2c, new OctetString(com), new OctetString("com2sec"), StorageType.other);
+		vacm.addGroup(SecurityModel.SECURITY_MODEL_SNMPv2c, new OctetString(com), new OctetString("com2sec"), StorageType.volatile_);
+		vacm.addGroup(SecurityModel.SECURITY_MODEL_SNMPv2c, new OctetString(com), new OctetString("com2sec"), StorageType.nonVolatile);
+		vacm.addGroup(SecurityModel.SECURITY_MODEL_SNMPv2c, new OctetString(com), new OctetString("com2sec"), StorageType.permanent);
+		vacm.addGroup(SecurityModel.SECURITY_MODEL_SNMPv2c, new OctetString(com), new OctetString("com2sec"), StorageType.readOnly);
+		//group name + context prefix + security model + security level  + match + readview + read vview +write view + notify view + storage type
+		vacm.addAccess(new OctetString("com2sec"), new OctetString(com), SecurityModel.SECURITY_MODEL_ANY, SecurityLevel.NOAUTH_NOPRIV, MutableVACM.VACM_MATCH_EXACT, new OctetString(com), new OctetString(com), new OctetString(com), StorageType.nonVolatile);
+		// view name + subtree + mask + type + storagetype
+		vacm.addViewTreeFamily(new OctetString(com), new OID("1.3.6.1.3.2019"), new OctetString(com), VacmMIB.vacmViewIncluded, StorageType.nonVolatile);
+		vacm.addViewTreeFamily(new OctetString(com), new OID("1.3.6.1.3.2019.3"), new OctetString(com), VacmMIB.vacmViewIncluded, StorageType.nonVolatile);
+		vacm.addViewTreeFamily(new OctetString(com), new OID("1.3.6.1.3.2019.3.1."), new OctetString(com), VacmMIB.vacmViewIncluded, StorageType.nonVolatile);
+		vacm.addViewTreeFamily(new OctetString(com), new OID("1.3.6.1.3.2019.3.1.4"), new OctetString(com), VacmMIB.vacmViewIncluded, StorageType.nonVolatile);
+		vacm.addViewTreeFamily(new OctetString(com), new OID("1.3.6.1.3.2019.3.1.4.0"), new OctetString(com), VacmMIB.vacmViewIncluded, StorageType.nonVolatile);
+		vacm.addViewTreeFamily(new OctetString(com), new OID("1.3.6.1.3.2019.3.1.4.1"), new OctetString(com), VacmMIB.vacmViewIncluded, StorageType.nonVolatile);
+		vacm.addViewTreeFamily(new OctetString(com), new OID("1.3.6.1.3.2019.3.1.4.2"), new OctetString(com), VacmMIB.vacmViewIncluded, StorageType.nonVolatile);
 
-		vacm.addGroup(SecurityModel.SECURITY_MODEL_SNMPv2c, new OctetString(
-						"cpublic"), new OctetString("v1v2group"),
-				StorageType.nonVolatile);
-
-		vacm.addAccess(new OctetString("v1v2group"), new OctetString("public"),
-				SecurityModel.SECURITY_MODEL_ANY, SecurityLevel.NOAUTH_NOPRIV,
-				MutableVACM.VACM_MATCH_EXACT, new OctetString("fullReadView"),
-				new OctetString("fullWriteView"), new OctetString(
-						"fullNotifyView"), StorageType.nonVolatile);
-
-		vacm.addViewTreeFamily(new OctetString("fullReadView"), new OID("1.3"),
-				new OctetString(), VacmMIB.vacmViewIncluded,
-				StorageType.nonVolatile);
+	}
+	protected void addCommunities(SnmpCommunityMIB communityMIB) {
+		UniversalVariables UV = UniversalVariables.getInstance();
+		String com = UV.Get_CMS();
+		Variable[] com2sec = new Variable[]{
+				new OctetString(com), // community name
+				new OctetString(com), // security name
+				getAgent().getContextEngineID(), // local engine ID
+				new OctetString(com), // default context name
+				new OctetString(com), // transport tag
+				new Integer32(StorageType.nonVolatile), // storage type
+				new Integer32(RowStatus.active) // row status
+		};
+		MOTableRow row = communityMIB.getSnmpCommunityEntry().createRow(new OctetString(com).toSubIndex(true), com2sec);
+		communityMIB.getSnmpCommunityEntry().addRow(row);
 	}
 
 	/**
@@ -140,9 +180,11 @@ public class Agent extends BaseAgent {
 		init();
 		// This method reads some old config from a file and causes
 		// unexpected behavior.
-		// loadConfig(ImportModes.REPLACE_CREATE); 
+		// loadConfig(ImportModes.REPLACE_CREATE);
 		addShutdownHook();
-		getServer().addContext(new OctetString("public"));
+		UniversalVariables UV = UniversalVariables.getInstance();
+		String com = UV.Get_CMS();
+		getServer().addContext(new OctetString(com));
 		finishInit();
 		run();
 		sendColdStartNotification();
@@ -157,48 +199,50 @@ public class Agent extends BaseAgent {
 		String indexp = SP.Get_Indexp();
 		String imagep = SP.Get_indImagep();
 		String flagp = SP.Get_flagp();
-		registerManagedObject(new MOScalar(new OID("1.3.6.1.3.2019.1.1.0"), MOAccessImpl.ACCESS_READ_ONLY, new OctetString(indexp)));
-		registerManagedObject(new MOScalar(new OID("1.3.6.1.3.2019.1.2.0"), MOAccessImpl.ACCESS_READ_ONLY, new OctetString(imagep)));
-		registerManagedObject(new MOScalar(new OID("1.3.6.1.3.2019.1.3.0"), MOAccessImpl.ACCESS_READ_ONLY, new OctetString(flagp)));
+		registerManagedObject(new MOScalar(new OID("1.3.6.1.3.2019.1.1.0"), MOAccessImpl.ACCESS_READ_WRITE, new Integer32(Integer.parseInt(indexp))));
+		registerManagedObject(new MOScalar(new OID("1.3.6.1.3.2019.1.2.0"), MOAccessImpl.ACCESS_READ_WRITE, new Integer32(Integer.parseInt(imagep))));
+		registerManagedObject(new MOScalar(new OID("1.3.6.1.3.2019.1.3.0"), MOAccessImpl.ACCESS_READ_WRITE, new Integer32(Integer.parseInt(flagp))));
 		//Table of imagens
+
+
+		MOAccess Permissao = new MOAccessImpl(ACCESSIBLE_FOR_READ_WRITE);
 		SingleTableImage TI = SingleTableImage.getInstance();
 		int size = TI.Get_size();
 			for (int j=0; j <size; j++) {
 				//registerManagedObject(new MOScalar(new OID("1.3.6.1.3.2019.2.1.1."+oid+".0"), MOAccessImpl.ACCESS_READ_ONLY, new OctetString(String.valueOf(j))));
+
 				MOTableBuilder builder = new MOTableBuilder(new OID("1.3.6.1.3.2019.2.1."))
-						.addColumnType(SMIConstants.SYNTAX_INTEGER, MOAccessImpl.ACCESS_READ_ONLY);
+						.addColumnType(SMIConstants.SYNTAX_INTEGER,  MOAccessImpl.ACCESS_READ_WRITE);
 				// Normally you would begin loop over you two domain objects her
-
-
 				//next row
-				builder.addColumnType(SMIConstants.SYNTAX_OCTET_STRING, MOAccessImpl.ACCESS_READ_ONLY);
+				builder.addColumnType(SMIConstants.SYNTAX_OCTET_STRING, MOAccessImpl.ACCESS_READ_WRITE);
 				for (int k = 0; k < size; k++) {
 					String id = TI.Get_ID_by_inteiroseq(k);
-					builder.addRowValue(new Integer32(Integer.parseInt(id)));
-					String indImage = TI.Get_Image_by_id(id);
+					builder.addRowValue(new Integer32(k));
+					String indImage = TI.Get_Image_by_id(String.valueOf(k));
 					builder.addRowValue(new OctetString(indImage));
 				}
 				int[] indexes = new int[size];
 				for (int k = 0; k < size; k++) {
 					String id = TI.Get_ID_by_inteiroseq(k);
-					indexes[k]=Integer.parseInt(id);
+					indexes[k]=k;
 				}
 				registerManagedObject(builder.build(indexes));
 			}
+
 		//Table container
 		SingleCointainerTable C = SingleCointainerTable.getInstance();
 		int sizec = C.Get_size();
 		for (int j=0; j <sizec; j++) {
 			//registerManagedObject(new MOScalar(new OID("1.3.6.1.3.2019.2.1.1."+oid+".0"), MOAccessImpl.ACCESS_READ_ONLY, new OctetString(String.valueOf(j))));
 			MOTableBuilder builder = new MOTableBuilder(new OID("1.3.6.1.3.2019.3.1."))
-					.addColumnType(SMIConstants.SYNTAX_INTEGER, MOAccessImpl.ACCESS_READ_ONLY);
-			builder.addColumnType(SMIConstants.SYNTAX_OCTET_STRING, MOAccessImpl.ACCESS_READ_ONLY);
-			builder.addColumnType(SMIConstants.SYNTAX_OCTET_STRING, MOAccessImpl.ACCESS_READ_ONLY);
-			builder.addColumnType(SMIConstants.SYNTAX_OCTET_STRING, MOAccessImpl.ACCESS_READ_ONLY);
-			builder.addColumnType(SMIConstants.SYNTAX_INTEGER, MOAccessImpl.ACCESS_READ_ONLY);
+					.addColumnType(SMIConstants.SYNTAX_INTEGER, MOAccessImpl.ACCESS_READ_WRITE)
+			.addColumnType(SMIConstants.SYNTAX_OCTET_STRING, MOAccessImpl.ACCESS_READ_WRITE)
+			.addColumnType(SMIConstants.SYNTAX_OCTET_STRING, MOAccessImpl.ACCESS_READ_WRITE)
+			.addColumnType(SMIConstants.SYNTAX_OCTET_STRING, MOAccessImpl.ACCESS_READ_WRITE)
+			.addColumnType(SMIConstants.SYNTAX_INTEGER, MOAccessImpl.ACCESS_READ_WRITE);
 
-			for (int k = 0; k < sizec; k++) {
-				String id = C.Get_Index_by_the_ID(k+1);
+				String id = C.Get_Index_by_the_ID(j);
 				builder.addRowValue(new Integer32(Integer.parseInt(id)));
 				String namec = C.Get_Name_by_ID(id);
 				builder.addRowValue(new OctetString(namec));
@@ -206,13 +250,13 @@ public class Agent extends BaseAgent {
 				builder.addRowValue(new OctetString(imagec));
 				String statusc = C.Get_Status_by_ID(id);
 				builder.addRowValue(new OctetString(statusc));
-				String processorc = C.Get_Processor_by_ID(id);
-				builder.addRowValue(new Integer32(Integer.parseInt(processorc)));
-			}
+				//String processorc = C.Get_Processor_by_ID(id);
+				builder.addRowValue(new Integer32(Integer.parseInt("2")));
+
 			int[] indexes = new int[sizec];
 			for (int k = 0; k < sizec; k++) {
-				String id = C.Get_Index_by_the_ID(k+1);
-				indexes[k]=Integer.parseInt(id);
+				String idx = C.Get_Index_by_the_ID(k);
+				indexes[k]=Integer.parseInt(idx);
 			}
 			registerManagedObject(builder.build(indexes));
 		}
@@ -229,11 +273,10 @@ public class Agent extends BaseAgent {
 			TimeTicks timefinal = new TimeTicks(Long.parseLong(timesticksfinal));
 			int counter = S.Get_counter_by_id(String.valueOf(k));
 			//int counter_int = Integer.valueOf(counter);
-			registerManagedObject(new MOScalar(new OID("1.3.6.1.3.2019.4.1.0"), MOAccessImpl.ACCESS_READ_ONLY, new OctetString(indexs)));
-			registerManagedObject(new MOScalar(new OID("1.3.6.1.3.2019.4.2.0"), MOAccessImpl.ACCESS_READ_ONLY, new OctetString(userids)));
-			registerManagedObject(new MOScalar(new OID("1.3.6.1.3.2019.4.3.0"), MOAccessImpl.ACCESS_READ_ONLY, new TimeTicks(timeinit)));
-			registerManagedObject(new MOScalar(new OID("1.3.6.1.3.2019.4.4.0"), MOAccessImpl.ACCESS_READ_ONLY, new TimeTicks(timefinal)));
-			registerManagedObject(new MOScalar(new OID("1.3.6.1.3.2019.4.5.0"), MOAccessImpl.ACCESS_READ_ONLY, new Counter64(counter)));
+			registerManagedObject(new MOScalar(new OID("1.3.6.1.3.2019.4.1.0"), MOAccessImpl.ACCESS_READ_WRITE, new Integer32(Integer.parseInt(indexs))));
+			registerManagedObject(new MOScalar(new OID("1.3.6.1.3.2019.4.3.0"), MOAccessImpl.ACCESS_READ_WRITE, new TimeTicks(timeinit)));
+			registerManagedObject(new MOScalar(new OID("1.3.6.1.3.2019.4.4.0"), MOAccessImpl.ACCESS_READ_WRITE, new TimeTicks(timefinal)));
+			registerManagedObject(new MOScalar(new OID("1.3.6.1.3.2019.4.5.0"), MOAccessImpl.ACCESS_READ_WRITE, new Counter64(counter)));
 			}
 
 
@@ -242,25 +285,21 @@ public class Agent extends BaseAgent {
 	/**
 	 * Adds community to security name mappings needed for SNMPv1 and SNMPv2c.
 	 */
-	protected void addCommunities(SnmpCommunityMIB communityMIB) {
-		UniversalVariables UV = UniversalVariables.getInstance();
-		String com = UV.Get_CMS();
-		Variable[] com2sec = new Variable[]{
+	public ResponseEvent snmpSetOperation(VariableBinding[] vars)
+			throws IOException {
+		System.out.println("entrou");
 
-				new OctetString(com), // community name
-				new OctetString("cpublic"), // security name
-				getAgent().getContextEngineID(), // local engine ID
-				new OctetString("public"), // default context name
-				new OctetString(), // transport tag
-				new Integer32(StorageType.nonVolatile), // storage type
-				new Integer32(RowStatus.active) // row status
-		};
-		MOTableRow row = communityMIB.getSnmpCommunityEntry().createRow(new OctetString("public2public").toSubIndex(true), com2sec);
-		communityMIB.getSnmpCommunityEntry().addRow(row);
+		PDU setPdu = new ScopedPDU();
+		for (VariableBinding variableBinding : vars) {
+			setPdu.add(variableBinding);
+		}
+		return snmp.send(setPdu, target);
 	}
 
-	public static void main(String[] args) throws IOException, InterruptedException {
-		//parametros
+	public static void main(String[] args) throws IOException, InterruptedException, DockerCertificateException, DockerException, URISyntaxException {
+
+
+
 		String configuration = args[0];
 		String images = args[1];
 		System.out.println(configuration);
@@ -304,11 +343,33 @@ public class Agent extends BaseAgent {
 		UV.Put_CMS(community_string);
 		System.out.println(community_string);
 		initparam();
-		initTableImage();
+		initTableImage(images);
 		initContainerTable();
 		initTableStatus();
+
+
 		Agent agent = new Agent("127.0.0.1/" + porta);
 		agent.start();
+
+		TransportMapping transport = new DefaultUdpTransportMapping();
+		Snmp snmp = new Snmp(transport);
+		transport.listen();
+		ResponseListener listener = new ResponseListener() {
+			@Override
+			public void onResponse(ResponseEvent responseEvent) {
+				((Snmp)responseEvent.getSource()).cancel(responseEvent.getRequest(),this);
+				PDU response =responseEvent.getResponse();
+				System.out.println(response);
+				}
+		};
+
+		/*
+		Variable[] vars = new Variable[]{
+				new OctetString(), // community name
+		}
+			ResponseEvent response = agent
+					.snmpSetOperation((VariableBinding[]) vars);
+		System.out.println(response.getResponse());*/
 		agent.unregisterManagedObject(agent.getSnmpv2MIB());
 		while (true) {
 			System.out.println("Agent running...");
@@ -316,7 +377,12 @@ public class Agent extends BaseAgent {
 		}
 	}
 
-	public static void initparam() {
+
+	public static void initparam() throws DockerCertificateException, DockerException, InterruptedException, IOException, URISyntaxException {
+
+		//DockerInformation DI = new DockerInformation();
+		//DI.createcontainer("postgres");
+
 		List<String> lista_de_param_file = new ArrayList<String>();
 		File file = new File("resultados.txt");
 		BufferedReader reader = null;
@@ -363,130 +429,60 @@ public class Agent extends BaseAgent {
 
 	}
 
-	public static void initTableImage() {
-		int count=0;
-		//Ficheiro de configuração das imagens
-		List<String> lista_de_tableimage = new ArrayList<String>();
-		File file = new File("resultados.txt");
-		BufferedReader reader = null;
-		try {
-			reader = new BufferedReader(new FileReader(file));
-			String text = null;
+	public static void initTableImage(String images) throws DockerException, InterruptedException, DockerCertificateException {
+        List<String> list = new ArrayList<String>();
+        File file = new File(images);
+        BufferedReader reader = null;
+        try {
+            reader = new BufferedReader(new FileReader(file));
+            String text = null;
 
-			while ((text = reader.readLine()) != null) {
-				lista_de_tableimage.add(text);
-			}
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		} finally {
-			try {
-				if (reader != null) {
-					reader.close();
-				}
-			} catch (IOException e) {
-			}
-		}
-		SingleTableImage TI = SingleTableImage.getInstance();
-		for (int i = 0; i < lista_de_tableimage.size(); i++) {
-			String varindimage = lista_de_tableimage.get(i);
-			String[] varoid_temp = varindimage.split(Pattern.quote("."));
+            while ((text = reader.readLine()) != null) {
+                list.add(text);
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (reader != null) {
+                    reader.close();
+                }
+            } catch (IOException e) {
+            }
+        }
+        DockerInformation DI = new DockerInformation();
+        TreeMap statuses= DI.getname();
 
-			String oid_table = varoid_temp[6];
-			String oid_index = varoid_temp[8];
-			if (oid_table.equals("2")) {
-				if (oid_index.equals("2")) {
-					count++;
-					String[] indImage_file_split = varindimage.split(Pattern.quote("|"));
-					System.out.println(Arrays.toString(indImage_file_split));
-					String indImage_value = indImage_file_split[2];
-					System.out.println(indImage_value);
-					String index = indImage_file_split[0];
-					String[] index2 = index.split(Pattern.quote("|"));
-					String index3 = index2[0];
-					String[]index4 = index3.split(Pattern.quote("."));
-					String index5 = index4[9];
-					TI.Put_ID_Image(index5,indImage_value);
-					TI.Put_Intseq_ID(count-1, index5);
-				}
-			}
-		}
-		TI.Put_size(count);
+        for(int i = 0;i<list.size();i++){
+            SingleTableImage TI = SingleTableImage.getInstance();
+            TI.Put_ID_Image(String.valueOf(i),String.valueOf(list.get(i)));
+            TI.Put_size(list.size());
+        }
+
+       // TI.Put_ID_Image(String.valueOf(i),info.config().image());
+        //TI.Put_size(allContainers.size());
 	}
 
-	public static void initContainerTable() {
-		//Ficheiro de configuração das imagens
-		List<String> lista_de_container = new ArrayList<String>();
-		File file = new File("resultados.txt");
-		BufferedReader reader = null;
-		try {
-			reader = new BufferedReader(new FileReader(file));
-			String text = null;
+	public static void initContainerTable() throws DockerCertificateException, DockerException, InterruptedException {
 
-			while ((text = reader.readLine()) != null) {
-				lista_de_container.add(text);
-			}
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		} finally {
-			try {
-				if (reader != null) {
-					reader.close();
-				}
-			} catch (IOException e) {
-			}
-		}
 		int counter =0;
+		DockerInformation DI = new DockerInformation();
+		TreeMap name = DI.getname();
+		TreeMap image = DI.getImage();
+		TreeMap status = DI.getContainersStatuses();
+		TreeMap processor = DI.getContainersProcessor();
 		SingleCointainerTable C = SingleCointainerTable.getInstance();
-		for (int i = 0; i < lista_de_container.size(); i++) {
-			String varindimage = lista_de_container.get(i);
-			String[] varoid_temp = varindimage.split(Pattern.quote("."));
-			String oid_objecto = varoid_temp[6];
-			String oid_instancia = varoid_temp[8];
-			if(oid_objecto.equals("3")){
-				if(oid_instancia.equals("1")){
-					counter++;
-					String[] array_oid = varindimage.split(Pattern.quote("|"));
-					String output = array_oid[2];
-					String index = array_oid[0];
-					C.Put_ID_CointainerTable_Index(counter, output);
-				}
-				if(oid_instancia.equals("2")){
-					String oid_partefinal = varoid_temp[9];
+		for (int i=0; i<name.size();i++) {
+            C.Put_ID_CointainerTable_Index(i, String.valueOf(i));
+            C.Put_ID_CointainerTable_Name(String.valueOf(i),String.valueOf(name.get(i+1)));
+            C.Put_ID_CointainerTable_Image(String.valueOf(i),String.valueOf(image.get(i+1)));
+            C.Put_ID_CointainerTable_Status(String.valueOf(i),String.valueOf(status.get(i+1)));
+            C.Put_ID_CointainerTable_Processor(String.valueOf(i), String.valueOf(processor.get(i+1)));
+        }
+		C.Put_size(name.size());
 
-					String[] array_oid = oid_partefinal.split(Pattern.quote("|"));
-					String output = array_oid[2];
-					String index = array_oid[0];
-					C.Put_ID_CointainerTable_Name(index,output);
-				}
-				if(oid_instancia.equals("3")){
-					String oid_partefinal = varoid_temp[9];
-					String[] array_oid = oid_partefinal.split(Pattern.quote("|"));
-					String output = array_oid[2];
-					String index = array_oid[0];
-					C.Put_ID_CointainerTable_Image(index,output);
-				}
-				if(oid_instancia.equals("4")){
-					String oid_partefinal = varoid_temp[9];
-					String[] array_oid = oid_partefinal.split(Pattern.quote("|"));
-					String output = array_oid[2];
-					String index = array_oid[0];
-					C.Put_ID_CointainerTable_Status(index,output);
-				}
-				if(oid_instancia.equals("5")){
-					String oid_partefinal = varoid_temp[9];
-					String[] array_oid = oid_partefinal.split(Pattern.quote("|"));
-					String output = array_oid[2];
-					String index = array_oid[0];
-					C.Put_ID_CointainerTable_Processor(index,output);
-				}
-			}
-			C.Put_size(counter);
-
-		}
 	}
 	public static void initTableStatus(){
 
