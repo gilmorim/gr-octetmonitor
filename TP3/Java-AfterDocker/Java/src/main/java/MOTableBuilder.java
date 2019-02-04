@@ -6,7 +6,9 @@ import org.snmp4j.smi.SMIConstants;
 import org.snmp4j.smi.Variable;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.regex.Pattern;
 
 
 /**
@@ -27,7 +29,7 @@ MOTable table = builder.build();
  * @author johanrask
  *
  */
-public class MOTableBuilder {
+public class MOTableBuilder  implements MOChangeListener, MOTableRowListener{
 
 	private MOTableSubIndex[] subIndexes = new MOTableSubIndex[] { new MOTableSubIndex(
 			SMIConstants.SYNTAX_INTEGER) };
@@ -93,11 +95,50 @@ public class MOTableBuilder {
 		for (Variable[] variables : tableRows) {
 			model.addRow(new DefaultMOMutableRow2PC(new OID(String.valueOf(indexes[i])),
 					variables));
+
 			i++;
 		}
 		ifTable.setVolatile(true);
+		ifTable.addMOChangeListener(this);
+		ifTable.addMOTableRowListener(this);
 		return ifTable;
 	}
 
 
+	@Override
+	public void beforePrepareMOChange(MOChangeEvent moChangeEvent) {
+
+	}
+
+	@Override
+	public void afterPrepareMOChange(MOChangeEvent moChangeEvent) {
+
+	}
+
+	@Override
+	public void beforeMOChange(MOChangeEvent moChangeEvent) {
+
+	}
+
+	@Override
+	public void afterMOChange(MOChangeEvent moChangeEvent) {
+		moChangeEvent.getChangedObject();
+		Variable smi = moChangeEvent.getNewValue();
+		OID oc = 	moChangeEvent.getOID();
+		Variable mc = moChangeEvent.getOldValue();
+		System.out.println(smi);
+		System.out.println(oc);
+		String OID = oc.toString();
+		String[] oidporpontos = OID.split(Pattern.quote("."));
+		System.out.println(Arrays.toString(oidporpontos));
+
+	}
+
+	@Override
+	public void rowChanged(MOTableRowEvent moTableRowEvent) {
+
+		MOColumn col = moTableRowEvent.getTable().getColumn(1);
+		System.out.printf(col.toString());
+
+	}
 }

@@ -43,5 +43,5 @@ public class UniversalVariables {
     public MOScalar Get_escalar_param_2 (){
         return ms2;
     }
-    
+
 }

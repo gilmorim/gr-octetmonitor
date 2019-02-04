@@ -609,7 +609,7 @@ public class Agent extends BaseAgent implements MOChangeListener {
 		SingleTableImage TI = SingleTableImage.getInstance();
 		UniversalVariables UV = UniversalVariables.getInstance();
 		if (objecto.equals("1")){
-			if (instancia.equals("1")){
+				if (instancia.equals("1")){
 				String imagem = TI.Get_Image_by_id(value);
 				if (value.equals("null")){
 					System.out.println("Não existem imagens com esse id ");
