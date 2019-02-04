@@ -56,6 +56,7 @@ public class Agent extends BaseAgent implements MOChangeListener {
 	private Snmp snmp;
 	private String address;
 	private UserTarget target;
+	int g =0;
 
 	public Agent(String address) throws IOException {
 
@@ -194,7 +195,6 @@ public class Agent extends BaseAgent implements MOChangeListener {
 
 	@Override
 	protected void registerManagedObjects( ) {
-
 		getSnmpv2MIB().unregisterMOs(server, getContext(getSnmpv2MIB()));
 		UniversalVariables UV = UniversalVariables.getInstance();
 		SingleParam SP = SingleParam.getInstance();
@@ -213,6 +213,19 @@ public class Agent extends BaseAgent implements MOChangeListener {
 		UV.Put_escalar_param_1(mp1);
 		UV.Put_escalar_param_2(mp2);
 		UV.Put_escalar_param_3(mp3);
+		SingleStatus S = SingleStatus.getInstance();
+		//Status
+		for (int k = 0; k < 1; k++) {
+			String indexs = S.Get_ID_by_inteiro(0);
+			String timesticksinit = S.Get_Timebegins_by_id(String.valueOf(k));
+			TimeTicks timeinit = new TimeTicks(Long.parseLong(timesticksinit));
+			int counter = S.Get_counter_by_id(String.valueOf(k));
+			//int counter_int = Integer.valueOf(counter);
+			registerManagedObject(new MOScalar(new OID("1.3.6.1.3.2019.4.1.0"), MOAccessImpl.ACCESS_READ_WRITE, new Integer32(Integer.parseInt(indexs))));
+			registerManagedObject(new MOScalar(new OID("1.3.6.1.3.2019.4.2.0"), MOAccessImpl.ACCESS_READ_WRITE, new TimeTicks(timeinit)));
+			registerManagedObject(new MOScalar(new OID("1.3.6.1.3.2019.4.3.0"), MOAccessImpl.ACCESS_READ_WRITE, new Counter64(counter)));
+		}
+
 		//Table of imagens
 		MOAccess Permissao = new MOAccessImpl(ACCESSIBLE_FOR_READ_WRITE);
 		SingleTableImage TI = SingleTableImage.getInstance();
@@ -223,83 +236,81 @@ public class Agent extends BaseAgent implements MOChangeListener {
 				builder.addColumnType(SMIConstants.SYNTAX_OCTET_STRING, MOAccessImpl.ACCESS_READ_WRITE);
 				for (int k = 0; k < size; k++) {
 					String id = TI.Get_ID_by_inteiroseq(k);
-					builder.addRowValue(new Integer32(k));
+					builder.addRowValue(new Integer32(k+1));
 					String indImage = TI.Get_Image_by_id(String.valueOf(k));
 					builder.addRowValue(new OctetString(indImage));
 				}
 				int[] indexes = new int[size];
 				for (int k = 0; k < size; k++) {
 					String id = TI.Get_ID_by_inteiroseq(k);
-					indexes[k]=k;
+					indexes[k]=k+1;
 				}
 				registerManagedObject(builder.build(indexes));
 			}
-
 		//Table container
+
 		SingleCointainerTable C = SingleCointainerTable.getInstance();
 		int sizec = C.Get_size();
-		for (int j=0; j <sizec; j++) {
-			//registerManagedObject(new MOScalar(new OID("1.3.6.1.3.2019.2.1.1."+oid+".0"), MOAccessImpl.ACCESS_READ_ONLY, new OctetString(String.valueOf(j))));
+		if (sizec ==0 ){
 			MOTableBuilder builder = new MOTableBuilder(new OID("1.3.6.1.3.2019.3.1."))
-					.addColumnType(SMIConstants.SYNTAX_INTEGER, MOAccessImpl.ACCESS_READ_WRITE)
+			.addColumnType(SMIConstants.SYNTAX_INTEGER, MOAccessImpl.ACCESS_READ_WRITE)
 			.addColumnType(SMIConstants.SYNTAX_OCTET_STRING, MOAccessImpl.ACCESS_READ_WRITE)
 			.addColumnType(SMIConstants.SYNTAX_OCTET_STRING, MOAccessImpl.ACCESS_READ_WRITE)
 			.addColumnType(SMIConstants.SYNTAX_OCTET_STRING, MOAccessImpl.ACCESS_READ_WRITE)
 			.addColumnType(SMIConstants.SYNTAX_INTEGER, MOAccessImpl.ACCESS_READ_WRITE);
 
-				String id = C.Get_Index_by_the_ID(j);
-				builder.addRowValue(new Integer32(Integer.parseInt(id)));
-				String namec = C.Get_Name_by_ID(id);
-				builder.addRowValue(new OctetString(namec));
-				String imagec = C.Get_Image_by_ID(id);
-				builder.addRowValue(new OctetString(imagec));
-				String statusc = C.Get_Status_by_ID(id);
-				builder.addRowValue(new OctetString(statusc));
-				//String processorc = C.Get_Processor_by_ID(id);
-				builder.addRowValue(new Integer32(Integer.parseInt("2")));
+			builder.addRowValue(new Integer32(0));
+			builder.addRowValue(new OctetString("null"));
+			builder.addRowValue(new OctetString("null"));
+			builder.addRowValue(new OctetString("null"));
+			builder.addRowValue(new Integer32(0));
 
-			int[] indexes = new int[sizec];
-			for (int k = 0; k < sizec; k++) {
-				String idx = C.Get_Index_by_the_ID(k);
-				indexes[k]=Integer.parseInt(idx);
+			int[] indexes = new int[1];
+			for (int k = 0; k < 1; k++) {
+				indexes[k]=k;
 			}
 			registerManagedObject(builder.build(indexes));
 		}
-		//status
 
-		SingleStatus S = SingleStatus.getInstance();
+		else {
+			for (int j=0; j <sizec; j++) {
+				//registerManagedObject(new MOScalar(new OID("1.3.6.1.3.2019.2.1.1."+oid+".0"), MOAccessImpl.ACCESS_READ_ONLY, new OctetString(String.valueOf(j))));
+				MOTableBuilder builder = new MOTableBuilder(new OID("1.3.6.1.3.2019.3.1."))
+						.addColumnType(SMIConstants.SYNTAX_INTEGER, MOAccessImpl.ACCESS_READ_WRITE)
+						.addColumnType(SMIConstants.SYNTAX_OCTET_STRING, MOAccessImpl.ACCESS_READ_WRITE)
+						.addColumnType(SMIConstants.SYNTAX_OCTET_STRING, MOAccessImpl.ACCESS_READ_WRITE)
+						.addColumnType(SMIConstants.SYNTAX_OCTET_STRING, MOAccessImpl.ACCESS_READ_WRITE)
+						.addColumnType(SMIConstants.SYNTAX_INTEGER, MOAccessImpl.ACCESS_READ_WRITE);
+				for (int k = 0; k< sizec; k++){
 
-			for (int k = 0; k < 1; k++) {
-			String indexs = S.Get_ID_by_inteiro(0);
-			String userids = S.Get_userIds_by_id(String.valueOf(k));
-			String timesticksinit = S.Get_Timebegins_by_id(String.valueOf(k));
-			TimeTicks timeinit = new TimeTicks(Long.parseLong(timesticksinit));
-			String timesticksfinal = S.Get_Timefinals_by_id(String.valueOf(k));
-			TimeTicks timefinal = new TimeTicks(Long.parseLong(timesticksfinal));
-			int counter = S.Get_counter_by_id(String.valueOf(k));
-			//int counter_int = Integer.valueOf(counter);
-			registerManagedObject(new MOScalar(new OID("1.3.6.1.3.2019.4.1.0"), MOAccessImpl.ACCESS_READ_WRITE, new Integer32(Integer.parseInt(indexs))));
-			registerManagedObject(new MOScalar(new OID("1.3.6.1.3.2019.4.3.0"), MOAccessImpl.ACCESS_READ_WRITE, new TimeTicks(timeinit)));
-			registerManagedObject(new MOScalar(new OID("1.3.6.1.3.2019.4.4.0"), MOAccessImpl.ACCESS_READ_WRITE, new TimeTicks(timefinal)));
-			registerManagedObject(new MOScalar(new OID("1.3.6.1.3.2019.4.5.0"), MOAccessImpl.ACCESS_READ_WRITE, new Counter64(counter)));
+					String id = C.Get_Index_by_the_ID(k);
+					builder.addRowValue(new Integer32(Integer.parseInt(id)+1));
+					String namec = C.Get_Name_by_ID(id);
+					builder.addRowValue(new OctetString(namec));
+					String imagec = C.Get_Image_by_ID(id);
+					builder.addRowValue(new OctetString(imagec));
+					String statusc = C.Get_Status_by_ID(id);
+					builder.addRowValue(new OctetString(statusc));
+					//String processorc = C.Get_Processor_by_ID(id);
+					builder.addRowValue(new Integer32(Integer.parseInt("2")));
+				}
+
+				int[] indexes = new int[sizec];
+				for (int k = 0; k < sizec; k++) {
+					String idx = C.Get_Index_by_the_ID(k);
+					indexes[k]=Integer.parseInt(idx)+1;
+				}
+				registerManagedObject(builder.build(indexes));
 			}
+		}
 
 
 	}
+
 
 	/**
 	 * Adds community to security name mappings needed for SNMPv1 and SNMPv2c.
 	 */
-	public ResponseEvent snmpSetOperation(VariableBinding[] vars)
-			throws IOException {
-		System.out.println("entrou");
-
-		PDU setPdu = new ScopedPDU();
-		for (VariableBinding variableBinding : vars) {
-			setPdu.add(variableBinding);
-		}
-		return snmp.send(setPdu, target);
-	}
 
 	public static void main(String[] args) throws IOException, InterruptedException, DockerCertificateException, DockerException, URISyntaxException {
 
@@ -345,26 +356,23 @@ public class Agent extends BaseAgent implements MOChangeListener {
 		//abrir singleton
 		UniversalVariables UV = UniversalVariables.getInstance();
 		UV.Put_CMS(community_string);
+		UV.Put_porta(porta);
 		System.out.println(community_string);
-		initparam();
-		initTableImage(images);
-		initContainerTable();
-		initTableStatus();
 
+			initparam();
+			initTableImage(images);
+			initContainerTable();
+			initTableStatus();
 
+			criaragente();
+
+	}
+
+	public static void criaragente( ) throws IOException, InterruptedException {
+		UniversalVariables UV = UniversalVariables.getInstance();
+		String porta = UV.Get_porta();
 		Agent agent = new Agent("127.0.0.1/" + porta);
 		agent.start();
-		TransportMapping transport = new DefaultUdpTransportMapping();
-		Snmp snmp = new Snmp(transport);
-		transport.listen();
-		ResponseListener listener = new ResponseListener() {
-			@Override
-			public void onResponse(ResponseEvent responseEvent) {
-				((Snmp)responseEvent.getSource()).cancel(responseEvent.getRequest(),this);
-				PDU response =responseEvent.getResponse();
-				System.out.println(response);
-			}
-		};
 		//MOChangeListener Mo
 		/*
 		Variable[] vars = new Variable[]{
@@ -376,10 +384,9 @@ public class Agent extends BaseAgent implements MOChangeListener {
 		agent.unregisterManagedObject(agent.getSnmpv2MIB());
 		while (true) {
 			System.out.println("Agent running...");
-			Thread.sleep(5000);
+			Thread.sleep(100000);
 		}
 	}
-
 
 	public static void initparam() throws DockerCertificateException, DockerException, InterruptedException, IOException, URISyntaxException {
 
@@ -453,91 +460,22 @@ public class Agent extends BaseAgent implements MOChangeListener {
 		int countador_de_users=0;
 		int contador_Timestick_inicial =0;
 		int contador_Timestick_final =0;
-		//Ficheiro de configuração das imagens
-		List<String> lista_de_tablestatus = new ArrayList<String>();
-		File file = new File("resultados.txt");
-		BufferedReader reader = null;
-		try {
-			reader = new BufferedReader(new FileReader(file));
-			String text = null;
 
-			while ((text = reader.readLine()) != null) {
-				lista_de_tablestatus.add(text);
-			}
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		} finally {
-			try {
-				if (reader != null) {
-					reader.close();
-				}
-			} catch (IOException e) {
-			}
-		}
 		SingleStatus S = SingleStatus.getInstance();
 
-		for (int i = 0; i < lista_de_tablestatus.size(); i++) {
-			String linhadoficheiro = lista_de_tablestatus.get(i);
-			String[] oidporpontos = linhadoficheiro.split(Pattern.quote("."));
-			String oid_obje = oidporpontos[6];
-			String oid_insta = oidporpontos[7];
-			if (oid_obje.equals("4")) {
-				//se for userids
-				if (oid_insta.equals("1")) {
-					//buscar index
-					String oid_index_bruto = oidporpontos[8];
-					String[] oid_index_barras = oid_index_bruto.split(Pattern.quote("|"));
-					String oid_index = oid_index_barras[0];
-					//buscar valor do index
-					String index_value = oid_index_barras[2];
+		for (int i = 0; i < 1; i++) {
+					String index_value = "0";
 					S.Put_Int_ID(0,index_value);
-				}
-				if (oid_insta.equals("2")) {
-					//buscar index
-					String oid_index_bruto = oidporpontos[8];
-					String[] oid_index_barras = oid_index_bruto.split(Pattern.quote("|"));
-					String oid_index = oid_index_barras[0];
-					//buscar valor user
-					String userids_value = oid_index_barras[2];
-					S.Put_ID_userIds(oid_index,userids_value);
-				}
-				if (oid_insta.equals("3")) {
-					//buscar index
-					String oid_index_bruto = oidporpontos[8];
-					String[] oid_index_barras = oid_index_bruto.split(Pattern.quote("|"));
-					String oid_index = oid_index_barras[0];
-					//buscar valor timestick inicial
-					String timestickinicial = oid_index_barras[2];
-					S.Put_ID_Timebegins(oid_index,timestickinicial);
-				}
-				if (oid_insta.equals("4")) {
-					//buscar index
-					String oid_index_bruto = oidporpontos[8];
-					String[] oid_index_barras = oid_index_bruto.split(Pattern.quote("|"));
-					String oid_index = oid_index_barras[0];
-					//buscar valor timestick final
-					String timestickfinal = oid_index_barras[2];
-					S.Put_ID_Timefinals(oid_index,timestickfinal);
-
-				}
-
-				if (oid_insta.equals("5")) {
-					//buscar index
-					String oid_index_bruto = oidporpontos[8];
-					String[] oid_index_barras = oid_index_bruto.split(Pattern.quote("|"));
-					String oid_index = oid_index_barras[0];
-					//buscar valor counter
-					String counter_value = oid_index_barras[2];
-					int counter_value_int = Integer.parseInt(counter_value);
-					S.Put_ID_counter(oid_index,counter_value_int);
+					String userids_value = "0";
+					S.Put_ID_userIds(String.valueOf(i),userids_value);
+					S.Put_ID_Timebegins(String.valueOf(i),"512832217");
+					S.Put_ID_counter(String.valueOf(i),989261567);
 
 				}
 		}
 
-		}
-	}
+
+
 
 	@Override
 	public void beforePrepareMOChange(MOChangeEvent moChangeEvent) {
@@ -556,46 +494,49 @@ public class Agent extends BaseAgent implements MOChangeListener {
 
 	@Override
 	public void afterMOChange(MOChangeEvent moChangeEvent) {
-		moChangeEvent.getChangedObject();
-		Variable smi = moChangeEvent.getNewValue();
-		OID oc = moChangeEvent.getOID();
-		Variable mc = moChangeEvent.getOldValue();
-		System.out.println(smi);
-		System.out.println(oc);
-		String OID = oc.toString();
-		String[] oidporpontos = OID.split(Pattern.quote("."));
-		System.out.println(Arrays.toString(oidporpontos));
-		String objecto = oidporpontos[6];
-		String instancia = oidporpontos[7];
-		String value = oidporpontos[8];
-		SingleParam SP = SingleParam.getInstance();
-		SingleTableImage TI = SingleTableImage.getInstance();
-		UniversalVariables UV = UniversalVariables.getInstance();
-		if (objecto.equals("1")) {
-			if (instancia.equals("1")) {
-				String imagem = TI.Get_Image_by_id(String.valueOf(smi));
-				System.out.println(imagem);
-				if (imagem == null) {
-					System.out.println("Não existem imagens com esse id ");
-					MOScalar param1 = UV.Get_escalar_param_1();
-					MOScalar param2 = UV.Get_escalar_param_2();
-					MOScalar param3 = UV.Get_escalar_param_3();
-					param3.setValue(new Integer32(0));
-					param2.setValue(new OctetString("ERRO"));
-					param1.setValue(new Integer32(0));
-				} else {
-					SP.Put_id_snmpset(Integer.parseInt(String.valueOf(smi)));
+		do {
+			moChangeEvent.getChangedObject();
+			Variable smi = moChangeEvent.getNewValue();
+			OID oc = moChangeEvent.getOID();
+			System.out.println(smi);
+			System.out.println(oc);
+			String OID = oc.toString();
+			g = 1;
 
-					SP.Put_Indexp(value);
-					SP.Put_indImagep(imagem);
-					SP.Put_flagp("0");
-					MOScalar param2 = UV.Get_escalar_param_2();
-					MOScalar param3 = UV.Get_escalar_param_3();
-					param3.setValue(new Integer32(0));
-					param2.setValue(new OctetString(imagem));
 
+			String[] oidporpontos = OID.split(Pattern.quote("."));
+			System.out.println(Arrays.toString(oidporpontos));
+			String objecto = oidporpontos[6];
+			String instancia = oidporpontos[7];
+			String value = oidporpontos[8];
+			moChangeEvent = null;
+			SingleParam SP = SingleParam.getInstance();
+			SingleTableImage TI = SingleTableImage.getInstance();
+			UniversalVariables UV = UniversalVariables.getInstance();
+			if (objecto.equals("1")) {
+				if (instancia.equals("1")) {
+					String imagem = TI.Get_Image_by_id(String.valueOf(smi));
+					System.out.println(imagem);
+					if (imagem == null) {
+						System.out.println("Não existem imagens com esse id ");
+						MOScalar param1 = UV.Get_escalar_param_1();
+						MOScalar param2 = UV.Get_escalar_param_2();
+						MOScalar param3 = UV.Get_escalar_param_3();
+						param3.setValue(new Integer32(0));
+						param2.setValue(new OctetString("ERRO"));
+						param1.setValue(new Integer32(0));
+					} else {
+						SP.Put_id_snmpset(Integer.parseInt(String.valueOf(smi)));
+						SP.Put_Indexp(value);
+						SP.Put_indImagep(imagem);
+						SP.Put_flagp("0");
+						MOScalar param2 = UV.Get_escalar_param_2();
+						MOScalar param3 = UV.Get_escalar_param_3();
+						param3.setValue(new Integer32(0));
+						param2.setValue(new OctetString(imagem));
+
+					}
 				}
-			}
 				if (instancia.equals("2")) {
 					String ID = TI.Get_ID_by_Image(String.valueOf(smi));
 					SP.Put_id_snmpset(Integer.parseInt(ID));
@@ -619,43 +560,69 @@ public class Agent extends BaseAgent implements MOChangeListener {
 						));
 
 					}
-
-					// set flag
-					if (instancia.equals("3")) {
-						String flag = SP.Get_flagp();
-						if (flag == null) {
-							System.out.println("Não existem imagens com esse id ");
-							MOScalar param1 = UV.Get_escalar_param_1();
-							MOScalar param2 = UV.Get_escalar_param_2();
-							MOScalar param3 = UV.Get_escalar_param_3();
-							param3.setValue(new Integer32(0));
-							param2.setValue(new OctetString("ERRO"));
-							param1.setValue(new Integer32(0));
-						} else {
-							int id_daimagem = SP.Get_id_snmpset_param();
-							String imagem = TI.Get_Image_by_id(String.valueOf(id_daimagem));
-							try {
-								DockerInformation DI = new DockerInformation();
-								DI.createcontainer(imagem);
-								// iniciar container...
-								MOScalar param3 = UV.Get_escalar_param_3();
-								param3.setValue(new Integer32(1));
-
-								SingleStatus statistics = SingleStatus.getInstance();
-								String indexp = SP.Get_Indexp();
-								StringBuilder timestamp = new StringBuilder();
-								timestamp.append(System.currentTimeMillis());
-								statistics.Put_ID_Timebegins(indexp, timestamp.toString());
-							} catch (DockerCertificateException | DockerException | InterruptedException e) {
-								e.printStackTrace();
-							}
-
-						}
-					}
 				}
+
+
+				// set flag
+				if (instancia.equals("3")) {
+					String flag = SP.Get_flagp();
+					if (flag == null) {
+						System.out.println("Não existem imagens com esse id ");
+						MOScalar param1 = UV.Get_escalar_param_1();
+						MOScalar param2 = UV.Get_escalar_param_2();
+						MOScalar param3 = UV.Get_escalar_param_3();
+						param3.setValue(new Integer32(0));
+						param2.setValue(new OctetString("ERRO"));
+						param1.setValue(new Integer32(0));
+					} else {
+
+						int id_daimagem = SP.Get_id_snmpset_param();
+						String imagem = TI.Get_Image_by_id(String.valueOf(id_daimagem));
+						MOScalar param3 = UV.Get_escalar_param_3();
+						param3.setValue(new Integer32(1));
+						criarcontainer(imagem);
+						//SingleStatus statistics = SingleStatus.getInstance();
+						//String indexp = SP.Get_Indexp();
+						//StringBuilder timestamp = new StringBuilder();
+						//timestamp.append(System.currentTimeMillis());
+						//statistics.Put_ID_Timebegins(indexp, timestamp.toString());
+						//MOMutableTableModel mode = UV.Get_Table_3()
+						instancia = null;
+						oc = null;
+					}
+
+
+
+				}
+				instancia = null;
+				oc = null;
+				OID = null;
 			}
-		}
+
+		}while (g==0);
 	}
+	public void criarcontainer (String imagem)  {
+
+
+		DockerInformation DI = null;
+		try {
+			DI = new DockerInformation();
+			DI.createcontainer(imagem);
+
+		} catch (DockerCertificateException e) {
+			e.printStackTrace();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		} catch (DockerException e) {
+			e.printStackTrace();
+		}
+
+
+	}
+}
+
+
+
 
 
 

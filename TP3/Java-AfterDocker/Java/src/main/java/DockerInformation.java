@@ -37,16 +37,9 @@ public class DockerInformation {
         final Map<String, List<PortBinding>> portBindings = new HashMap<>();
         for (String port : ports) {
             List<PortBinding> hostPorts = new ArrayList<>();
-            hostPorts.add(PortBinding.of("0.0.0.0", port));
+            hostPorts.add(PortBinding.of("127.0.0.1", port));
             portBindings.put(port, hostPorts);
         }
-        final NetworkCreation network = dockerClient.createNetwork(
-                NetworkConfig
-                        .builder()
-                        .name("test-network")
-                        .driver("bridge")
-                        .build()
-        );
         //criacao de containers
        final ContainerConfig containerConfig = ContainerConfig.builder()
                .image(Image)
@@ -54,7 +47,6 @@ public class DockerInformation {
                .build();
         final ContainerCreation container = dockerClient.createContainer(containerConfig);
         dockerClient.startContainer(container.id());
-        dockerClient.connectToNetwork(container.id(), network.id());
 
     }
     // lista dos nomes dos containers
@@ -91,7 +83,7 @@ public class DockerInformation {
 
         for(int i = 0; i != allContainers.size(); i++){
             ContainerInfo info = dockerClient.inspectContainer(allContainers.get(i).id());
-            statuses.put(i+1, info.name());
+            statuses.put(i+1, info.image());
         }
 
         return statuses;

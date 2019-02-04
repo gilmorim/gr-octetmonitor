@@ -1,3 +1,4 @@
+import org.snmp4j.agent.mo.MOMutableTableModel;
 import org.snmp4j.agent.mo.MOScalar;
 
 public class UniversalVariables {
@@ -6,9 +7,12 @@ public class UniversalVariables {
 
     // variable of type String
     public String cms;
+    public String porta;
     MOScalar ms1;
     MOScalar ms2;
     MOScalar ms3;
+
+    MOMutableTableModel m3;
     // private constructor restricted to this class itself
     private UniversalVariables()
     {
@@ -30,6 +34,13 @@ public class UniversalVariables {
     public String Get_CMS (){
         return cms;
     }
+    public void Put_porta (String numporta){
+        this.porta=numporta;
+    }
+
+    public String Get_porta (){
+        return porta;
+    }
 
     public void Put_escalar_param_1(MOScalar ms_new){
         this.ms1=ms_new;
@@ -49,4 +60,13 @@ public class UniversalVariables {
     public MOScalar Get_escalar_param_3(){
         return ms3;
     }
+
+    public void Put_Table_3 (MOMutableTableModel table){
+        this.m3 = table;
+    }
+
+    public MOMutableTableModel Get_Table_3(){
+        return m3;
+    }
+
 }

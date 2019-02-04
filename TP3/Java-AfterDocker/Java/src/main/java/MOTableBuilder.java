@@ -86,18 +86,29 @@ public class MOTableBuilder  implements MOChangeListener, MOTableRowListener{
 		return this;
 	}
 
+
+
 	public MOTable build(int[] indexes) {
 		DefaultMOTable ifTable = new DefaultMOTable(tableRootOid, indexDef,
 				columns.toArray(new MOColumn[0]));
+
+
 		MOMutableTableModel model = (MOMutableTableModel) ifTable.getModel();
 		int i = 0;
+		UniversalVariables UV = UniversalVariables.getInstance();
 
+		String[] oidporpontos = String.valueOf(tableRootOid).split(Pattern.quote("."));
+		String objecto = oidporpontos[6];
+		if (objecto.equals("3")){
+			UV.Put_Table_3(model);
+		}
 		for (Variable[] variables : tableRows) {
 			model.addRow(new DefaultMOMutableRow2PC(new OID(String.valueOf(indexes[i])),
 					variables));
 
 			i++;
 		}
+
 		ifTable.setVolatile(true);
 		ifTable.addMOChangeListener(this);
 		ifTable.addMOTableRowListener(this);
