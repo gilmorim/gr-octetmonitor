@@ -10,6 +10,7 @@ public class SingleParam {
     public String indexp_stored;
     public String indImagep_stored;
     public String flagp_stored;
+    int id_CONT_criar;
     // private constructor restricted to this class itself
     private SingleParam()
     {
@@ -40,5 +41,13 @@ public class SingleParam {
         this.flagp_stored=flagp;    }
     public String Get_flagp(){
         return flagp_stored;
+    }
+
+    public  void Put_id_snmpset(int id){
+        this.id_CONT_criar=id;
+    }
+
+    public int Get_id_snmpset_param(){
+        return id_CONT_criar;
     }
 }

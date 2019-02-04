@@ -43,5 +43,10 @@ public class UniversalVariables {
     public MOScalar Get_escalar_param_2 (){
         return ms2;
     }
-
+    public  void Put_escalar_param_3(MOScalar ms3_new){
+        this.ms3 = ms3_new;
+    }
+    public MOScalar Get_escalar_param_3(){
+        return ms3;
+    }
 }

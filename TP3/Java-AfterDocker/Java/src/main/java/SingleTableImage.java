@@ -7,6 +7,8 @@ public class SingleTableImage {
 
     private Map<String,String> ID_TableImage_imagem = new HashMap<String, String>();
     private Map<Integer,String> Intseq_TableImgage_ID = new HashMap<Integer, String>();
+    private Map<String,String> Imagem_TableImage_ID = new HashMap<String, String>();
+
     public int size;
 
 
@@ -26,11 +28,16 @@ public class SingleTableImage {
 
     public void Put_ID_Image (String Id, String Image) {
         ID_TableImage_imagem.put(Id, Image);
+        Imagem_TableImage_ID.put(Image,Id);
     }
 
     public String Get_Image_by_id (String Id){
         String Image_new = ID_TableImage_imagem.get(Id);
         return Image_new;
+    }
+    public String Get_ID_by_Image (String image_new){
+        String ID_new = Imagem_TableImage_ID.get(image_new);
+        return  ID_new;
     }
 
     public void Put_Intseq_ID(int inteiro, String Id){

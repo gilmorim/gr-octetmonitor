@@ -28,7 +28,7 @@ public class DockerInformation {
         //dockerClient.tag("121a1e5546e4", "busybox");
         //dockerClient.startContainer("busybox");
 
-        dockerClient.pull("postgres:9.5");
+        dockerClient.pull(Image);
         //final URL dockerfile = getClass().getResource("/");
         //final String imageId = dockerClient.build(Paths.get(dockerfile.toURI()), DockerClient.BuildParam.name("busybox"));
         //final HostConfig hostConfig = HostConfig.builder().logConfig(LogConfig.create("json-file")).publishAllPorts(true).build();
@@ -49,7 +49,7 @@ public class DockerInformation {
         );
         //criacao de containers
        final ContainerConfig containerConfig = ContainerConfig.builder()
-               .image("postgres:9.5")
+               .image(Image)
                .exposedPorts(ports)
                .build();
         final ContainerCreation container = dockerClient.createContainer(containerConfig);
