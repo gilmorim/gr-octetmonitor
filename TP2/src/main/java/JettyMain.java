@@ -8,15 +8,10 @@ import org.snmp4j.smi.GenericAddress;
 import org.snmp4j.smi.OID;
 import org.snmp4j.smi.OctetString;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.Timer;
-import java.util.TimerTask;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.ScheduledFuture;
-import java.util.concurrent.TimeUnit;
+
 
 public class JettyMain {
     public static void main(String[] args) throws Exception {
@@ -28,13 +23,10 @@ public class JettyMain {
         int status = configFile.openConfigFile();
         System.out.println("Status: " + Vars.LOG_MESSAGES[status]);
 
-        final int delay = 1000;
-
         /*get data from config file*/
         String ipAddress = configFile.getIpAddress();
         String communityString = configFile.getCommunityString();
         int port = configFile.getPort();
-        int version = configFile.getVersion();
         int timeout = configFile.getTimeout();
         int retries = configFile.getRetries();
 
@@ -61,11 +53,7 @@ public class JettyMain {
             // Fill InterfaceInformation object
             for (int i = 0; i != interfaceCount; i++) {
                 interfaces.add(new InterfaceInformation());
-                if(i%2 == 0){
-                    interfaces.get(i).setInterval(1000);
-                } else {
-                    interfaces.get(i).setInterval(5000);
-                }
+                interfaces.get(i).setInterval(1000);
             }
             System.out.println("interface count " + interfaceCount);
 

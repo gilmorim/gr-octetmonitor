@@ -52,6 +52,7 @@ public class InterfaceInformation {
         this.interval = interval;
     }
 
+    public int getPreviousDifference() { return previousDifference; }
 
     public void setPreviousDifference(int previousDifference){this.previousDifference = previousDifference;}
 
@@ -71,6 +72,24 @@ public class InterfaceInformation {
         this.outgoingOctetsOid = outgoingOctetsOid;
     }
 
+    public void increaseInterval(int increment){
+        if(interval + increment > 15000){
+            interval = 15000;
+        } else {
+            interval+=increment;
+        }
+
+    }
+
+    public void decreaseInterval(int decrement){
+        if(interval - decrement < 0){
+            interval = 1000;
+        } else {
+            interval-=decrement;
+        }
+
+    }
+
     @Override
     public String toString() {
         return  "description = " + description + " \n" +
@@ -80,6 +99,6 @@ public class InterfaceInformation {
                 "status = " + status + " \n" +
                 "interval = " + interval/1000 + "s \n" +
                 "difference = " + getDifference() + "\n" +
-                "change in rate = " + (getDifference() - previousDifference) + "\n\n";
+                "change in rate = " + Math.abs(getDifference() - previousDifference) + "\n\n";
     }
 }
