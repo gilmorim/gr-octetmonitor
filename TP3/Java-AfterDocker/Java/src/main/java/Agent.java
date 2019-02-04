@@ -5,23 +5,27 @@ import com.spotify.docker.client.exceptions.DockerException;
 import com.spotify.docker.client.messages.ContainerConfig;
 import com.spotify.docker.client.messages.ContainerCreation;
 import jnr.ffi.annotations.In;
-import org.snmp4j.TransportMapping;
+import org.snmp4j.*;
 import org.snmp4j.agent.*;
-import org.snmp4j.agent.mo.DefaultMOFactory;
-import org.snmp4j.agent.mo.MOAccessImpl;
-import org.snmp4j.agent.mo.MOScalar;
-import org.snmp4j.agent.mo.MOTableRow;
+import org.snmp4j.agent.example.SampleAgent;
+import org.snmp4j.agent.mo.*;
 import org.snmp4j.agent.mo.snmp.*;
 import org.snmp4j.agent.security.MutableVACM;
+import org.snmp4j.event.ResponseEvent;
+import org.snmp4j.event.ResponseListener;
 import org.snmp4j.log.Log4jLogFactory;
 import org.snmp4j.log.LogFactory;
+import org.snmp4j.mp.MPv1;
+import org.snmp4j.mp.MPv2c;
 import org.snmp4j.mp.MPv3;
-import org.snmp4j.security.SecurityLevel;
-import org.snmp4j.security.SecurityModel;
-import org.snmp4j.security.USM;
+import org.snmp4j.mp.SnmpConstants;
+import org.snmp4j.security.*;
 import org.snmp4j.smi.*;
+import org.snmp4j.transport.AbstractTransportMapping;
+import org.snmp4j.transport.DefaultTcpTransportMapping;
+import org.snmp4j.transport.DefaultUdpTransportMapping;
 import org.snmp4j.transport.TransportMappings;
-
+import org.snmp4j.util.MultiThreadedMessageDispatcher;
 import java.awt.*;
 import java.io.*;
 import java.net.URISyntaxException;
@@ -48,8 +52,9 @@ public class Agent extends BaseAgent {
 	static {
 		LogFactory.setLogFactory(new Log4jLogFactory());
 	}
-
+	private Snmp snmp;
 	private String address;
+	private UserTarget target;
 
 	public Agent(String address) throws IOException {
 
@@ -198,17 +203,19 @@ public class Agent extends BaseAgent {
 		registerManagedObject(new MOScalar(new OID("1.3.6.1.3.2019.1.2.0"), MOAccessImpl.ACCESS_READ_WRITE, new Integer32(Integer.parseInt(imagep))));
 		registerManagedObject(new MOScalar(new OID("1.3.6.1.3.2019.1.3.0"), MOAccessImpl.ACCESS_READ_WRITE, new Integer32(Integer.parseInt(flagp))));
 		//Table of imagens
+
+
 		MOAccess Permissao = new MOAccessImpl(ACCESSIBLE_FOR_READ_WRITE);
 		SingleTableImage TI = SingleTableImage.getInstance();
 		int size = TI.Get_size();
 			for (int j=0; j <size; j++) {
-
 				//registerManagedObject(new MOScalar(new OID("1.3.6.1.3.2019.2.1.1."+oid+".0"), MOAccessImpl.ACCESS_READ_ONLY, new OctetString(String.valueOf(j))));
+
 				MOTableBuilder builder = new MOTableBuilder(new OID("1.3.6.1.3.2019.2.1."))
-						.addColumnType(SMIConstants.SYNTAX_INTEGER, Permissao);
+						.addColumnType(SMIConstants.SYNTAX_INTEGER,  MOAccessImpl.ACCESS_READ_WRITE);
 				// Normally you would begin loop over you two domain objects her
 				//next row
-				builder.addColumnType(SMIConstants.SYNTAX_OCTET_STRING,Permissao);
+				builder.addColumnType(SMIConstants.SYNTAX_OCTET_STRING, MOAccessImpl.ACCESS_READ_WRITE);
 				for (int k = 0; k < size; k++) {
 					String id = TI.Get_ID_by_inteiroseq(k);
 					builder.addRowValue(new Integer32(k));
@@ -222,6 +229,7 @@ public class Agent extends BaseAgent {
 				}
 				registerManagedObject(builder.build(indexes));
 			}
+
 		//Table container
 		SingleCointainerTable C = SingleCointainerTable.getInstance();
 		int sizec = C.Get_size();
@@ -234,8 +242,7 @@ public class Agent extends BaseAgent {
 			.addColumnType(SMIConstants.SYNTAX_OCTET_STRING, MOAccessImpl.ACCESS_READ_WRITE)
 			.addColumnType(SMIConstants.SYNTAX_INTEGER, MOAccessImpl.ACCESS_READ_WRITE);
 
-			for (int k = 0; k < sizec; k++) {
-				String id = C.Get_Index_by_the_ID(k);
+				String id = C.Get_Index_by_the_ID(j);
 				builder.addRowValue(new Integer32(Integer.parseInt(id)));
 				String namec = C.Get_Name_by_ID(id);
 				builder.addRowValue(new OctetString(namec));
@@ -243,13 +250,13 @@ public class Agent extends BaseAgent {
 				builder.addRowValue(new OctetString(imagec));
 				String statusc = C.Get_Status_by_ID(id);
 				builder.addRowValue(new OctetString(statusc));
-				String processorc = C.Get_Processor_by_ID(id);
-				builder.addRowValue(new Integer32(Integer.parseInt(processorc)));
-			}
+				//String processorc = C.Get_Processor_by_ID(id);
+				builder.addRowValue(new Integer32(Integer.parseInt("2")));
+
 			int[] indexes = new int[sizec];
 			for (int k = 0; k < sizec; k++) {
-				String id = C.Get_Index_by_the_ID(k);
-				indexes[k]=Integer.parseInt(id);
+				String idx = C.Get_Index_by_the_ID(k);
+				indexes[k]=Integer.parseInt(idx);
 			}
 			registerManagedObject(builder.build(indexes));
 		}
@@ -278,9 +285,21 @@ public class Agent extends BaseAgent {
 	/**
 	 * Adds community to security name mappings needed for SNMPv1 and SNMPv2c.
 	 */
+	public ResponseEvent snmpSetOperation(VariableBinding[] vars)
+			throws IOException {
+		System.out.println("entrou");
+
+		PDU setPdu = new ScopedPDU();
+		for (VariableBinding variableBinding : vars) {
+			setPdu.add(variableBinding);
+		}
+		return snmp.send(setPdu, target);
+	}
 
 	public static void main(String[] args) throws IOException, InterruptedException, DockerCertificateException, DockerException, URISyntaxException {
-		//parametros
+
+
+
 		String configuration = args[0];
 		String images = args[1];
 		System.out.println(configuration);
@@ -327,8 +346,30 @@ public class Agent extends BaseAgent {
 		initTableImage(images);
 		initContainerTable();
 		initTableStatus();
+
+
 		Agent agent = new Agent("127.0.0.1/" + porta);
 		agent.start();
+
+		TransportMapping transport = new DefaultUdpTransportMapping();
+		Snmp snmp = new Snmp(transport);
+		transport.listen();
+		ResponseListener listener = new ResponseListener() {
+			@Override
+			public void onResponse(ResponseEvent responseEvent) {
+				((Snmp)responseEvent.getSource()).cancel(responseEvent.getRequest(),this);
+				PDU response =responseEvent.getResponse();
+				System.out.println(response);
+				}
+		};
+
+		/*
+		Variable[] vars = new Variable[]{
+				new OctetString(), // community name
+		}
+			ResponseEvent response = agent
+					.snmpSetOperation((VariableBinding[]) vars);
+		System.out.println(response.getResponse());*/
 		agent.unregisterManagedObject(agent.getSnmpv2MIB());
 		while (true) {
 			System.out.println("Agent running...");
@@ -336,11 +377,13 @@ public class Agent extends BaseAgent {
 		}
 	}
 
+
 	public static void initparam() throws DockerCertificateException, DockerException, InterruptedException, IOException, URISyntaxException {
 
 		//DockerInformation DI = new DockerInformation();
-		//DI.createcontainer();
-        List<String> lista_de_param_file = new ArrayList<String>();
+		//DI.createcontainer("postgres");
+
+		List<String> lista_de_param_file = new ArrayList<String>();
 		File file = new File("resultados.txt");
 		BufferedReader reader = null;
 		try {

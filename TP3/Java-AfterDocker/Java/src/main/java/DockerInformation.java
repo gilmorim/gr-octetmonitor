@@ -24,13 +24,14 @@ public class DockerInformation {
     }
 
 
-    public void createcontainer () throws DockerException, InterruptedException, URISyntaxException, IOException {
-        final URL dockerfile = getClass().getResource("/");
+    public void createcontainer (String Image) throws DockerException, InterruptedException  {
+        //dockerClient.tag("121a1e5546e4", "busybox");
+        //dockerClient.startContainer("busybox");
 
-        final String imageId = dockerClient.build(Paths.get(dockerfile.toURI()),
-                DockerClient.BuildParam.name("base:openjdk-131-jdk"));
-
-        final HostConfig hostConfig = HostConfig.builder().logConfig(LogConfig.create("json-file")).publishAllPorts(true).build();
+        dockerClient.pull("postgres:9.5");
+        //final URL dockerfile = getClass().getResource("/");
+        //final String imageId = dockerClient.build(Paths.get(dockerfile.toURI()), DockerClient.BuildParam.name("busybox"));
+        //final HostConfig hostConfig = HostConfig.builder().logConfig(LogConfig.create("json-file")).publishAllPorts(true).build();
         // Bind container ports to host ports
         final String[] ports = {"80", "22"};
         final Map<String, List<PortBinding>> portBindings = new HashMap<>();
@@ -47,17 +48,13 @@ public class DockerInformation {
                         .build()
         );
         //criacao de containers
-        final ContainerConfig containerConfig = ContainerCOnfig.builder()
-                .hostConfig(hostConfig)
-                .image(imageId).exposedPorts(ports)
-                .build();
+       final ContainerConfig containerConfig = ContainerConfig.builder()
+               .image("postgres:9.5")
+               .exposedPorts(ports)
+               .build();
         final ContainerCreation container = dockerClient.createContainer(containerConfig);
-
-
-        );
         dockerClient.startContainer(container.id());
         dockerClient.connectToNetwork(container.id(), network.id());
-
 
     }
     // lista dos nomes dos containers
