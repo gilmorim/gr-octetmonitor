@@ -63,6 +63,7 @@ public class MOTableBuilder {
 		colTypeCnt++;
 
 		MOColumn Mc  =new MOColumn(colTypeCnt, syntax, access);
+
 		Mc.setAccess(MOAccessImpl.ACCESS_READ_WRITE);
 		columns.add(Mc);
 
@@ -88,7 +89,7 @@ public class MOTableBuilder {
 				columns.toArray(new MOColumn[0]));
 		MOMutableTableModel model = (MOMutableTableModel) ifTable.getModel();
 		int i = 0;
-		
+
 		for (Variable[] variables : tableRows) {
 			model.addRow(new DefaultMOMutableRow2PC(new OID(String.valueOf(indexes[i])),
 					variables));

@@ -28,6 +28,7 @@ import org.snmp4j.transport.TransportMappings;
 import org.snmp4j.util.MultiThreadedMessageDispatcher;
 import java.awt.*;
 import java.io.*;
+import java.lang.reflect.Array;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -46,7 +47,7 @@ import static org.snmp4j.agent.mo.ext.AgentppSimulationMib.AgentppSimModeEnum.co
  * @author johanrask
  * 
  */
-public class Agent extends BaseAgent {
+public class Agent extends BaseAgent implements MOChangeListener {
 
 	// not needed but very useful of course
 	static {
@@ -192,29 +193,28 @@ public class Agent extends BaseAgent {
 
 
 	@Override
-	protected void registerManagedObjects() {
+	protected void registerManagedObjects( ) {
 
 		getSnmpv2MIB().unregisterMOs(server, getContext(getSnmpv2MIB()));
 		SingleParam SP = SingleParam.getInstance();
 		String indexp = SP.Get_Indexp();
 		String imagep = SP.Get_indImagep();
 		String flagp = SP.Get_flagp();
-		registerManagedObject(new MOScalar(new OID("1.3.6.1.3.2019.1.1.0"), MOAccessImpl.ACCESS_READ_WRITE, new Integer32(Integer.parseInt(indexp))));
-		registerManagedObject(new MOScalar(new OID("1.3.6.1.3.2019.1.2.0"), MOAccessImpl.ACCESS_READ_WRITE, new Integer32(Integer.parseInt(imagep))));
+		MOScalar ms = new MOScalar(new OID("1.3.6.1.3.2019.1.1.0"), MOAccessImpl.ACCESS_READ_WRITE, new Integer32(Integer.parseInt(indexp)));
+		MOScalar mc = new MOScalar(new OID("1.3.6.1.3.2019.1.2.0"), MOAccessImpl.ACCESS_READ_WRITE, new Integer32(Integer.parseInt(imagep)));
+		registerManagedObject(ms);
+		registerManagedObject(mc);
 		registerManagedObject(new MOScalar(new OID("1.3.6.1.3.2019.1.3.0"), MOAccessImpl.ACCESS_READ_WRITE, new Integer32(Integer.parseInt(flagp))));
+		ms.addMOChangeListener(this);
+		mc.addMOChangeListener(this);
 		//Table of imagens
-
 
 		MOAccess Permissao = new MOAccessImpl(ACCESSIBLE_FOR_READ_WRITE);
 		SingleTableImage TI = SingleTableImage.getInstance();
 		int size = TI.Get_size();
 			for (int j=0; j <size; j++) {
 				//registerManagedObject(new MOScalar(new OID("1.3.6.1.3.2019.2.1.1."+oid+".0"), MOAccessImpl.ACCESS_READ_ONLY, new OctetString(String.valueOf(j))));
-
-				MOTableBuilder builder = new MOTableBuilder(new OID("1.3.6.1.3.2019.2.1."))
-						.addColumnType(SMIConstants.SYNTAX_INTEGER,  MOAccessImpl.ACCESS_READ_WRITE);
-				// Normally you would begin loop over you two domain objects her
-				//next row
+				MOTableBuilder builder = new MOTableBuilder(new OID("1.3.6.1.3.2019.2.1.")).addColumnType(SMIConstants.SYNTAX_INTEGER,  Permissao);
 				builder.addColumnType(SMIConstants.SYNTAX_OCTET_STRING, MOAccessImpl.ACCESS_READ_WRITE);
 				for (int k = 0; k < size; k++) {
 					String id = TI.Get_ID_by_inteiroseq(k);
@@ -299,7 +299,6 @@ public class Agent extends BaseAgent {
 	public static void main(String[] args) throws IOException, InterruptedException, DockerCertificateException, DockerException, URISyntaxException {
 
 
-
 		String configuration = args[0];
 		String images = args[1];
 		System.out.println(configuration);
@@ -350,7 +349,6 @@ public class Agent extends BaseAgent {
 
 		Agent agent = new Agent("127.0.0.1/" + porta);
 		agent.start();
-
 		TransportMapping transport = new DefaultUdpTransportMapping();
 		Snmp snmp = new Snmp(transport);
 		transport.listen();
@@ -360,9 +358,9 @@ public class Agent extends BaseAgent {
 				((Snmp)responseEvent.getSource()).cancel(responseEvent.getRequest(),this);
 				PDU response =responseEvent.getResponse();
 				System.out.println(response);
-				}
+			}
 		};
-
+		//MOChangeListener Mo
 		/*
 		Variable[] vars = new Variable[]{
 				new OctetString(), // community name
@@ -573,6 +571,36 @@ public class Agent extends BaseAgent {
 		}
 
 		}
+	}
+
+	@Override
+	public void beforePrepareMOChange(MOChangeEvent moChangeEvent) {
+
+	}
+
+	@Override
+	public void afterPrepareMOChange(MOChangeEvent moChangeEvent) {
+
+	}
+
+	@Override
+	public void beforeMOChange(MOChangeEvent moChangeEvent) {
+
+	}
+
+	@Override
+	public void afterMOChange(MOChangeEvent moChangeEvent) {
+		moChangeEvent.getChangedObject();
+		Variable smi = moChangeEvent.getNewValue();
+		OID oc = 	moChangeEvent.getOID();
+		Variable mc = moChangeEvent.getOldValue();
+		System.out.println(smi);
+		System.out.println(oc);
+
+		String OID = oc.toString();
+		String[] oidporpontos = OID.split(Pattern.quote("."));
+		System.out.println(Arrays.toString(oidporpontos));
+
 	}
 }
 
