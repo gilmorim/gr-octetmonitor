@@ -25,14 +25,7 @@ public class DockerInformation {
 
 
     public void createcontainer (String Image) throws DockerException, InterruptedException  {
-        //dockerClient.tag("121a1e5546e4", "busybox");
-        //dockerClient.startContainer("busybox");
-
         dockerClient.pull(Image);
-        //final URL dockerfile = getClass().getResource("/");
-        //final String imageId = dockerClient.build(Paths.get(dockerfile.toURI()), DockerClient.BuildParam.name("busybox"));
-        //final HostConfig hostConfig = HostConfig.builder().logConfig(LogConfig.create("json-file")).publishAllPorts(true).build();
-        // Bind container ports to host ports
         final String[] ports = {"80", "22"};
         final Map<String, List<PortBinding>> portBindings = new HashMap<>();
         for (String port : ports) {
@@ -63,7 +56,7 @@ public class DockerInformation {
         return containers;
     }
 
-    // lista dos status dos containers
+    // lista dos status dos containers - 4
     public TreeMap<Integer, String> getContainersStatuses() throws DockerException, InterruptedException {
 
         List<Container> allContainers = dockerClient.listContainers(DockerClient.ListContainersParam.allContainers());
@@ -88,7 +81,7 @@ public class DockerInformation {
 
         return statuses;
     }
-
+   // este é o 3
     public TreeMap<Integer, String> getImage() throws DockerException, InterruptedException {
 
         List<Container> allContainers = dockerClient.listContainers(DockerClient.ListContainersParam.allContainers());
@@ -96,7 +89,7 @@ public class DockerInformation {
 
         for(int i = 0; i != allContainers.size(); i++){
             ContainerInfo info = dockerClient.inspectContainer(allContainers.get(i).id());
-            statuses.put(i+1, info.image());
+            statuses.put(i+1, info.config().image());
         }
 
         return statuses;
