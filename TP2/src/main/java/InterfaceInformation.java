@@ -18,6 +18,24 @@ public class InterfaceInformation {
         return description;
     }
 
+    public int getIndex() { return index; }
+
+    public String getMacAddress() {
+        return macAddress;
+    }
+
+    public int getIncomingOctets() {
+        return incomingOctets;
+    }
+
+    public int getOutgoingOctets() {
+        return outgoingOctets;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
     public void setIndex(int index) {
         this.index = index;
     }
