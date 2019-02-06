@@ -1,35 +1,18 @@
-import com.spotify.docker.client.DefaultDockerClient;
-import com.spotify.docker.client.DockerClient;
+
 import com.spotify.docker.client.exceptions.DockerCertificateException;
 import com.spotify.docker.client.exceptions.DockerException;
-import com.spotify.docker.client.messages.ContainerConfig;
-import com.spotify.docker.client.messages.ContainerCreation;
-import jnr.ffi.annotations.In;
-import org.ietf.jgss.Oid;
 import org.snmp4j.*;
 import org.snmp4j.agent.*;
-import org.snmp4j.agent.example.SampleAgent;
 import org.snmp4j.agent.mo.*;
 import org.snmp4j.agent.mo.snmp.*;
 import org.snmp4j.agent.security.MutableVACM;
-import org.snmp4j.event.ResponseEvent;
-import org.snmp4j.event.ResponseListener;
 import org.snmp4j.log.Log4jLogFactory;
 import org.snmp4j.log.LogFactory;
-import org.snmp4j.mp.MPv1;
-import org.snmp4j.mp.MPv2c;
 import org.snmp4j.mp.MPv3;
-import org.snmp4j.mp.SnmpConstants;
 import org.snmp4j.security.*;
 import org.snmp4j.smi.*;
-import org.snmp4j.transport.AbstractTransportMapping;
-import org.snmp4j.transport.DefaultTcpTransportMapping;
-import org.snmp4j.transport.DefaultUdpTransportMapping;
 import org.snmp4j.transport.TransportMappings;
-import org.snmp4j.util.MultiThreadedMessageDispatcher;
-import java.awt.*;
 import java.io.*;
-import java.lang.reflect.Array;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -55,6 +38,7 @@ public class Agent extends BaseAgent implements MOChangeListener {
 	private Snmp snmp;
 	private String address;
 	private UserTarget target;
+	public int count =0;
 	public Agent(String address) throws IOException {
 
 		/**
@@ -224,7 +208,7 @@ public class Agent extends BaseAgent implements MOChangeListener {
 			int counter = S.Get_counter_by_id(String.valueOf(k));
 			//int counter_int = Integer.valueOf(counter);
 			MOScalar ms1 = new MOScalar(new OID("1.3.6.1.3.2019.4.1.0"), MOAccessImpl.ACCESS_READ_WRITE, new Integer32(Integer.parseInt(indexs)));
-			MOScalar ms2 = new MOScalar(new OID("1.3.6.1.3.2019.4.2.0"), MOAccessImpl.ACCESS_READ_WRITE, new TimeTicks(timeinit));
+			MOScalar ms2 = new MOScalar(new OID("1.3.6.1.3.2019.4.2.0"), MOAccessImpl.ACCESS_READ_WRITE, new TimeTicks(Long.parseLong(String.valueOf("0"))));
 			MOScalar ms3 = new MOScalar(new OID("1.3.6.1.3.2019.4.3.0"), MOAccessImpl.ACCESS_READ_WRITE, new Counter64(counter));
 			UV.Put_escalar_status_1(ms1);
 			UV.Put_escalar_status_2(ms2);
@@ -267,13 +251,12 @@ public class Agent extends BaseAgent implements MOChangeListener {
 
 
 			for (int j=0; j <sizec; j++) {
-				//registerManagedObject(new MOScalar(new OID("1.3.6.1.3.2019.2.1.1."+oid+".0"), MOAccessImpl.ACCESS_READ_ONLY, new OctetString(String.valueOf(j))));
 				MOTableBuilder builder = new MOTableBuilder(new OID("1.3.6.1.3.2019.3.1."))
-						.addColumnType(SMIConstants.SYNTAX_INTEGER, MOAccessImpl.ACCESS_READ_WRITE)
-						.addColumnType(SMIConstants.SYNTAX_OCTET_STRING, MOAccessImpl.ACCESS_READ_WRITE)
-						.addColumnType(SMIConstants.SYNTAX_OCTET_STRING, MOAccessImpl.ACCESS_READ_WRITE)
-						.addColumnType(SMIConstants.SYNTAX_OCTET_STRING, MOAccessImpl.ACCESS_READ_WRITE)
-						.addColumnType(SMIConstants.SYNTAX_INTEGER, MOAccessImpl.ACCESS_READ_WRITE);
+						.addColumnType(SMIConstants.SYNTAX_INTEGER, MOAccessImpl.ACCESS_READ_ONLY)
+						.addColumnType(SMIConstants.SYNTAX_OCTET_STRING, MOAccessImpl.ACCESS_READ_ONLY)
+						.addColumnType(SMIConstants.SYNTAX_OCTET_STRING, MOAccessImpl.ACCESS_READ_ONLY)
+						.addColumnType(SMIConstants.SYNTAX_OCTET_STRING, MOAccessImpl.ACCESS_READ_ONLY)
+						.addColumnType(SMIConstants.SYNTAX_INTEGER, MOAccessImpl.ACCESS_READ_ONLY);
 				for (int k = 0; k< sizec; k++){
 					String id = C.Get_Index_by_the_ID(k);
 					builder.addRowValue(new Integer32(Integer.parseInt(id)+1));
@@ -299,7 +282,7 @@ public class Agent extends BaseAgent implements MOChangeListener {
 		}
 
 
-	
+
 
 
 	/**
@@ -559,7 +542,9 @@ public class Agent extends BaseAgent implements MOChangeListener {
 					param2.setValue(new OctetString("ERRO"));
 					param1.setValue(new Integer32(0));
 				} else {
+					// 0 é 1 ....
 					if (smi ==0) {
+						count ++;
 						int id_daimagem = SP.Get_id_snmpset_param();
 						String imagem = TI.Get_Image_by_id(String.valueOf(id_daimagem));
 						MOScalar param3 = UV.Get_escalar_param_3();
@@ -570,17 +555,19 @@ public class Agent extends BaseAgent implements MOChangeListener {
 						StringBuilder timestamp = new StringBuilder();
 						timestamp.append(System.currentTimeMillis());
 						statistics.Put_ID_Timebegins(indexp, timestamp.toString());
-						MOScalar ms3 = UV.Get_escalar_status_2();
-						TimeTicks tm = new TimeTicks();
+						MOScalar ms2 = UV.Get_escalar_status_2();
+						MOScalar ms3 = UV.Get_escalar_status_3();
+						//
+						// TimeTicks tm = new TimeTicks(Long.parseLong(timestamp.toString()));
+						//ms2.setValue(new TimeTicks(Long.parseLong(timestamp.toString())));
+						//ms3.setValue(new Counter64(Long.parseLong(String.valueOf(count))));
 						//ms3.setValue(new TimeTicks());
 						try {
 							Agent agente = UV.Get_Agente();
 							MOMutableTableModel t= UV.Get_Table_3();
 							t.removeRow(new OID("1.3.6.1.3.2019.3.1."));
 							t.clear();
-
 							agente.unregisterManagedObject(agente.getSnmpv2MIB());
-
 							MOTableBuilder mtb = new MOTableBuilder(new OID("1.3.6.1.3.2019.3.1."))
 									.addColumnType(SMIConstants.SYNTAX_INTEGER, MOAccessImpl.ACCESS_READ_WRITE)
 									.addColumnType(SMIConstants.SYNTAX_OCTET_STRING, MOAccessImpl.ACCESS_READ_WRITE)
@@ -646,11 +633,7 @@ public class Agent extends BaseAgent implements MOChangeListener {
 		} catch (DockerException e) {
 			e.printStackTrace();
 		}
-
-
 	}
-
-
 }
 
 
