@@ -46,7 +46,6 @@ public class SingleParam {
     public  void Put_id_snmpset(int id){
         this.id_CONT_criar=id;
     }
-
     public int Get_id_snmpset_param(){
         return id_CONT_criar;
     }

@@ -65,10 +65,8 @@ public class MOTableBuilder  implements MOChangeListener, MOTableRowListener{
 		colTypeCnt++;
 
 		MOColumn Mc  =new MOColumn(colTypeCnt, syntax, access);
-
 		Mc.setAccess(MOAccessImpl.ACCESS_READ_WRITE);
 		columns.add(Mc);
-
 		return this;
 	}
 
@@ -89,11 +87,12 @@ public class MOTableBuilder  implements MOChangeListener, MOTableRowListener{
 
 
 	public MOTable build(int[] indexes) {
-		DefaultMOTable ifTable = new DefaultMOTable(tableRootOid, indexDef,
+		MOTable ifTable = new DefaultMOTable(tableRootOid, indexDef,
 				columns.toArray(new MOColumn[0]));
 
 
 		MOMutableTableModel model = (MOMutableTableModel) ifTable.getModel();
+
 		int i = 0;
 		UniversalVariables UV = UniversalVariables.getInstance();
 
@@ -109,7 +108,6 @@ public class MOTableBuilder  implements MOChangeListener, MOTableRowListener{
 			i++;
 		}
 
-		ifTable.setVolatile(true);
 		ifTable.addMOChangeListener(this);
 		ifTable.addMOTableRowListener(this);
 		return ifTable;
